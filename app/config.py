@@ -1,8 +1,8 @@
 # DB
-DATABASE_USER = 'root'
-DATABASE_PASSWORD = '0000'
-DATABASE_HOST = '127.0.0.100'
-DATABASE_PORT = '3306'
+DATABASE_USER = 'user'
+DATABASE_PASSWORD = 'password'
+DATABASE_HOST = 'heroworks.iptime.org'
+DATABASE_PORT = '20233'
 DATABASE_DB = 'new_wedding'
 
 # DATABASE_USER = 'wedding1'
