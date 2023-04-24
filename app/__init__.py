@@ -3,7 +3,7 @@ import bcrypt
 # from flask_bcrypt import Bcrypt
 import json
 
-from app.models import session_scope, User
+from app.models import session_scope, User, Information, Weddinghall, Transportation
 from app.config import secret_key, bcrypt_level
 from app.views.index import geocoding
 
@@ -110,7 +110,7 @@ def register():
 def create():
     if request.method == 'GET':
         # from views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
-        from views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
+        from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
         groom_dict = groom_dict
         bride_dict = bride_dict
         bank_acc = bank_acc
