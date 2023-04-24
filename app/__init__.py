@@ -1,11 +1,3 @@
-# from flask import Flask
-
-# from views.template.template1 import template1
-
-# app = Flask(__name__)
-
-# app.register_blueprint(template1.bp)
-
 from flask import Flask, render_template, request, jsonify, redirect, session
 import bcrypt
 # from flask_bcrypt import Bcrypt
@@ -48,7 +40,7 @@ def index():
         transport_list = transport_list # 교통 수단 데이터
         guestbook_list = guestbook_list # 방명록 데이터
         
-        image_list = image_list # 이미지 데이터
+        image_list = image_list # 이미지 데이터   
     return render_template('index.html',  
                            groom_dict=groom_dict, 
                            bride_dict=bride_dict,
@@ -118,12 +110,13 @@ def register():
 def create():
     if request.method == 'GET':
         # from views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
-        # groom_dict = groom_dict
-        # bride_dict = bride_dict
-        # bank_acc = bank_acc
-        # wedding_schedule_dict = wedding_schedule_dict
-        # message_templates_dict = message_templates_dict
-        # guestbook_list = guestbook_list
+        from views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
+        groom_dict = groom_dict
+        bride_dict = bride_dict
+        bank_acc = bank_acc
+        wedding_schedule_dict = wedding_schedule_dict
+        message_templates_dict = message_templates_dict
+        guestbook_list = guestbook_list
         return render_template('/create.html',  
                             groom_dict=groom_dict, 
                             bride_dict=bride_dict,
@@ -135,7 +128,63 @@ def create():
                             bank_acc=bank_acc)
         
     if request.method == 'POST':
+        print("comming?")
         # data = request.get_json()
+        json_data = json.loads(request.form.get('json'))
+        print("@#$",type(json_data))
+
+        groom_dict = json_data['groom_dict']
+        bride_dict = json_data['bride_dict']
+        wedding_dict = json_data['wedding_schedule_dict']
+        message_dict = json_data['message_templates_dict']
+        guestbook_password = json_data['guestbook_password']
+        bank_acc = json_data['bank_acc']
+        transport_list = json_data['transport_list']
+        # print("@@groom_dict",groom_dict)
+        # print("@@bride_dict",bride_dict)
+        print("@@wedding_schedule_dict",wedding_dict)
+        print("@@message_templates_dict",message_dict)
+        print("@@guestbook_password",guestbook_password)
+        print("@@bank_acc",bank_acc)
+        print("@@transport_list",transport_list)
+
+        with session_scope() as db_session:
+            # 신랑 / 신부 가족 정보
+            key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherFirstName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
+            for i, d in enumerate([groom_dict, bride_dict]):
+                for check in range(0, 8, 3):
+                    info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], 5, 1+i if check == 0 else 3+i if check == 3 else 5+i)
+                    db_session.add(info_item)
+                    db_session.commit()
+                    db_session.refresh(info_item)
+
+            # 웨딩홀 정보
+            wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], 5, 0, 0)
+            db_session.add(wedding_hall_item)
+            db_session.commit()
+            db_session.refresh(wedding_hall_item)
+
+            # 메시지
+            # message_dict 위에 시는 안보내는지?
+
+            # 방명록 비밀번호 업데이트 -> 디폴트값 0000
+            user_item = db_session.query(User).filter(User.id == 5).first()
+            user_item.guestbook_pw = guestbook_password
+            db_session.commit()
+
+            # 계좌
+            # 계좌 디비 좀 수정해야할듯
+
+            # 대중교통
+            for i, t in enumerate(transport_list):
+                transport_item = Transportation(t['contents_transport'], 5, i+1)
+                db_session.add(transport_item)
+                db_session.commit()
+                db_session.refresh(transport_item)
+
+
+
+
         print(request.files)
         main_img_file = request.files['main_img']
         sub_img_file = request.files['sub_img']
