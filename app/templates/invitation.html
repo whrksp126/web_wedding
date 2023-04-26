@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{groom_dict.lastname}}{{groom_dict.firstname}} ♥ {{bride_dict.lastname}}{{bride_dict.firstname}} 결혼 합니다</title>
     
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
     <!-- 웹폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -485,7 +487,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ko0r34e7m9"></script>
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
         // jinja2 데이터 받기
         const message_templates_dict = {{message_templates_dict|safe}}; 
@@ -499,7 +500,7 @@
     <script type='text/javascript'>
         //<![CDATA[
           // // 사용할 앱의 JavaScript 키를 설정해 주세요.
-          Kakao.init('27ca6b94467a2ce3d976a7a0916e2491');
+          Kakao.init('19e6d6ca2612380690e073e3e59433ec');
           // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
           Kakao.Link.createDefaultButton({
             container: '#kakao-link-btn',
