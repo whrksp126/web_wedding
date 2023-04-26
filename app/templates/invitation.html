@@ -506,9 +506,9 @@
             container: '#kakao-link-btn',
             objectType: 'feed',
             content: {
-              title: '딸기 치즈 케익',
-              description: '#케익 #딸기 #삼평동 #카페 #분위기 #소개팅',
-              imageUrl: 'http://mud-kage.kakao.co.kr/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+              title: '{{groom_dict.lastname}}{{groom_dict.firstname}} ♥ {{bride_dict.lastname}}{{bride_dict.firstname}} 결혼합니다',
+              description: '{{wedding_schedule_dict.hall_detail}} {{wedding_schedule_dict.date}} {{wedding_schedule_dict.time}}',
+              imageUrl: 'http://wedding.ghmate.com{{image_list.main_img}}',
               link: {
                 mobileWebUrl: 'http://wedding.ghmate.com/invitation',
                 webUrl: 'http://wedding.ghmate.com/invitation'
@@ -516,7 +516,7 @@
             },
             buttons: [
               {
-                title: '웹으로 보기',
+                title: '모바일 청첩장 확인하기',
                 link: {
                   mobileWebUrl: 'http://wedding.ghmate.com/invitation',
                   webUrl: 'http://wedding.ghmate.com/invitation'
