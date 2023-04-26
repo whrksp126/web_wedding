@@ -1,5 +1,5 @@
 import requests
-from app.config import client_id, client_secret
+from config import client_id, client_secret
 
 def geocoding(addr):
     url = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query="+addr
