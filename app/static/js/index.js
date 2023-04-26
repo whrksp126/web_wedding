@@ -27,11 +27,15 @@ const showImgSlider = (index) => {
   const slider = document.getElementById('gallery_slider_element');
   slider.classList.add('show');
   swiper.slideTo(index, 300);
+  document.querySelector('body').style.overflow = 'hidden';
+
+
 }
 // 이미지 슬라이더 닫기
 const closeImgSlider = () => {
   const slider = document.getElementById('gallery_slider_element');
   slider.classList.remove('show');
+  document.querySelector('body').style.overflow = 'initial';
 }
 // 위도 경도 좌표 찍기
 const lat_lng = wedding_schedule_dict.lat_lng
@@ -182,3 +186,12 @@ function calculateDday(targetDate) {
 }
 const dday = calculateDday(dateString);
 document.querySelector('.dday-wrap .d-day').innerHTML = dday
+
+// 팝업 시 스크롤 방지
+document.querySelector('#popup_1').addEventListener('change', function() {
+  if (this.checked) {
+    document.querySelector('body').style.overflow = 'hidden';
+  } else {
+    document.querySelector('body').style.overflow = 'initial';
+  }
+});
