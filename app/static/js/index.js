@@ -149,10 +149,8 @@ function changeMonth(diff) {
 function loadCalendar(year, month){
   changeYearMonth(year, month);
   document.getElementById('current_date').innerText = `${year}년  ${month}월`
-  // $("#current_date").text(`${year}년  ${month}월`)
-  console.log(this_year, year, this_month, month)
   if(this_year === year && this_month === month){
-      setDate(this_date)
+      // setDate(this_date)
   }
   
 }
