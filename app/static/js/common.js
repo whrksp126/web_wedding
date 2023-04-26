@@ -29,3 +29,10 @@ const insertHTML = (element, dataDict) => {
   })
 }
 
+// 모바일 Browser Bottom, Top Bar 영역 vh 설정
+function setScreenSize() {
+	let vh = window.innerHeight * 0.01;
+	document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+setScreenSize();
+window.addEventListener('resize', setScreenSize);
