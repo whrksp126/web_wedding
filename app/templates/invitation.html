@@ -466,14 +466,14 @@
                             카카오톡으로 공유하기
                         </span>
                     </a>
-                    <div class="btn-kakao">
+                    <button class="btn-kakao" id="btn-url-copy">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
                         </svg>
                         <span style="display: inline-block; width: 9.2rem; margin-left: 6px;">
                             청첩장 주소 복사하기
                         </span>
-                    </div>
+                    </button>
                     
                     <div class="copyright-wrap">
                         <div class="copyright">
@@ -497,35 +497,6 @@
     
     <script src="/static/js/common.js"></script>
     <script src="/static/js/index.js"></script>
-    <script type='text/javascript'>
-        //<![CDATA[
-          // // 사용할 앱의 JavaScript 키를 설정해 주세요.
-          Kakao.init('19e6d6ca2612380690e073e3e59433ec');
-          // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
-          Kakao.Link.createDefaultButton({
-            container: '#kakao-link-btn',
-            objectType: 'feed',
-            content: {
-              title: '{{groom_dict.lastname}}{{groom_dict.firstname}} ♥ {{bride_dict.lastname}}{{bride_dict.firstname}} 결혼합니다',
-              description: '{{wedding_schedule_dict.hall_detail}} {{wedding_schedule_dict.date}} {{wedding_schedule_dict.time}}',
-              imageUrl: 'http://wedding.ghmate.com{{image_list.main_img}}',
-              link: {
-                mobileWebUrl: 'http://wedding.ghmate.com/invitation',
-                webUrl: 'http://wedding.ghmate.com/invitation'
-              }
-            },
-            buttons: [
-              {
-                title: '모바일 청첩장 확인하기',
-                link: {
-                  mobileWebUrl: 'http://wedding.ghmate.com/invitation',
-                  webUrl: 'http://wedding.ghmate.com/invitation'
-                }
-              },
-            ]
-          });
-        //]]>
-      </script>
     
 </body>
 </html>

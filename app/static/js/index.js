@@ -195,3 +195,45 @@ document.querySelector('#popup_1').addEventListener('change', function() {
     document.querySelector('body').style.overflow = 'initial';
   }
 });
+
+// 청첩장 주소 복사하기
+const copyButton = document.querySelector('#btn-url-copy');
+copyButton.addEventListener('click', function() {
+  const currentUrl = window.location.href;
+  navigator.clipboard.writeText(currentUrl)
+    .then(() => {
+      alert('현재 페이지 URL이 복사되었습니다.');
+    })
+    .catch((err) => {
+      console.error('현재 페이지 URL을 복사하는 중 오류가 발생했습니다:', err);
+    });
+});
+
+// 카카오 공유하기 
+//<![CDATA[
+  // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+  Kakao.init('19e6d6ca2612380690e073e3e59433ec');
+  // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+  Kakao.Link.createDefaultButton({
+    container: '#kakao-link-btn',
+    objectType: 'feed',
+    content: {
+      title: '{{groom_dict.lastname}}{{groom_dict.firstname}} ♥ {{bride_dict.lastname}}{{bride_dict.firstname}} 결혼합니다',
+      description: '{{wedding_schedule_dict.hall_detail}} {{wedding_schedule_dict.date}} {{wedding_schedule_dict.time}}',
+      imageUrl: 'http://wedding.ghmate.com{{image_list.main_img}}',
+      link: {
+        mobileWebUrl: 'http://wedding.ghmate.com/invitation',
+        webUrl: 'http://wedding.ghmate.com/invitation'
+      }
+    },
+    buttons: [
+      {
+        title: '모바일 청첩장 확인하기',
+        link: {
+          mobileWebUrl: 'http://wedding.ghmate.com/invitation',
+          webUrl: 'http://wedding.ghmate.com/invitation'
+        }
+      },
+    ]
+  });
+//]]>
