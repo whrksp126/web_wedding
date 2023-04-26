@@ -3,12 +3,12 @@ import bcrypt
 # from flask_bcrypt import Bcrypt
 import json
 
-from models import session_scope, User, Information, Weddinghall, Transportation
-from config import secret_key, bcrypt_level
-from views.index import geocoding
+from app.models import session_scope, User, Information, Weddinghall, Transportation
+from app.config import secret_key, bcrypt_level
+from app.views.index import geocoding
 
 
-from views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
+from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
 groom_dict = groom_dict # 신랑 데이터
 bride_dict = bride_dict # 신부 데이터
 wedding_schedule_dict = wedding_schedule_dict # 장소와 시간 데이터
@@ -32,7 +32,7 @@ def index():
         test = db_session.query(User).filter(User.id == 1).first()
         # name = test.name
         # 더미 존
-        from views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
+        from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
         groom_dict = groom_dict # 신랑 데이터
         bride_dict = bride_dict # 신부 데이터
         wedding_schedule_dict = wedding_schedule_dict # 장소와 시간 데이터

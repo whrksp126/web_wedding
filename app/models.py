@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.dialects.mysql import BINARY
 from sqlalchemy.types import TypeDecorator
 
-from config import DATABASE_HOST, DATABASE_DB, DATABASE_PORT, DATABASE_PASSWORD, DATABASE_USER
+from app.config import DATABASE_HOST, DATABASE_DB, DATABASE_PORT, DATABASE_PASSWORD, DATABASE_USER
 
 import json
 import enum
