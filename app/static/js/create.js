@@ -62,7 +62,7 @@ const setHasImg = (_imgContainer, canvas) => {
     _imgContainer.insertAdjacentHTML('beforeend',closeDiv);
     // 모바일 일 경우 touchstart
     if (/Mobi|Android/i.test(navigator.userAgent)) {
-        _imgContainer.querySelector('.btn-delete-img').addEventListener('touchend',(e)=>clickDeleteImg(e))
+        _imgContainer.querySelector('.btn-delete-img').addEventListener('touchend',(e)=>{setTimeout(() => {clickDeleteImg(e)}, 500)})
     }else {
         _imgContainer.querySelector('.btn-delete-img').addEventListener('click',(e)=>clickDeleteImg(e))
     }
@@ -74,7 +74,10 @@ const setGalleryHasImg = (_imgContainer, src) => {
     // 모바일 일 경우 touchstart
     if (/Mobi|Android/i.test(navigator.userAgent)) {
         _imgContainer.querySelector('.btn-open-modal').addEventListener('touchend',(e)=>{
-            openCropModar(src, e, _imgContainer)
+            setTimeout(()=>{
+                openCropModar(src, e, _imgContainer)
+            }, 500)
+            
         })
     }else{
         _imgContainer.querySelector('.btn-open-modal').addEventListener('click',(e)=>{
