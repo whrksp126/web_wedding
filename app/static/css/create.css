@@ -396,11 +396,13 @@ form[name="gallery-info"] div.gallery-image:nth-child(n+10) {
 /* 끝 계좌번호 */
 
 [name="guest-book-info"] input {
+  max-width: 220px;
   padding: 0 10px;
   border: 1px solid #ebebeb;
   font-size: 13px;
   color: #111;
   background: #fafafa;
+  
 }
 
 .card.card-submit {
