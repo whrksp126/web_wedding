@@ -392,7 +392,8 @@ if(document.querySelector('[name="reservation-info"] [type="date"]').value == ''
 
 const _gallery = document.querySelector('form[name="gallery-info"] div')
 let sortable = Sortable.create(_gallery,{
-    touchAction: 'none',
+    delayOnTouchOnly: true, // 사용자가 터치를 사용하는 경우에만 지연
+	touchStartThreshold: 10, // px, 지연된 드래그 이벤트를 취소하기 전에 점이 이동해야 하는 픽셀 수
     draggable: '.hasImg'
 });
 
