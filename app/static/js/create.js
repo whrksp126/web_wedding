@@ -60,19 +60,27 @@ const setHasImg = (_imgContainer, canvas) => {
     _imgContainer.classList.add('hasImg');
     _imgContainer.appendChild(canvas);
     _imgContainer.insertAdjacentHTML('beforeend',closeDiv);
-    _imgContainer.querySelector('.btn-delete-img').addEventListener('click',(e)=>clickDeleteImg(e))
-    _imgContainer.querySelector('.btn-delete-img').addEventListener('touchstart',(e)=>clickDeleteImg(e))
+    // 모바일 일 경우 touchstart
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        _imgContainer.querySelector('.btn-delete-img').addEventListener('touchstart',(e)=>clickDeleteImg(e))
+    }else {
+        _imgContainer.querySelector('.btn-delete-img').addEventListener('click',(e)=>clickDeleteImg(e))
+    }
 }
 // 갤러리 이미지 추가 시 html 세팅
 const setGalleryHasImg = (_imgContainer, src) => {
     const EditButton = `<button class="btn-open-modal">썸네일 편집</button>`
     _imgContainer.insertAdjacentHTML('beforeend',EditButton);
-    _imgContainer.querySelector('.btn-open-modal').addEventListener('click',(e)=>{
-        openCropModar(src, e, _imgContainer)
-    })
-    _imgContainer.querySelector('.btn-open-modal').addEventListener('touchstart',(e)=>{
-        openCropModar(src, e, _imgContainer)
-    })
+    // 모바일 일 경우 touchstart
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        _imgContainer.querySelector('.btn-open-modal').addEventListener('touchstart',(e)=>{
+            openCropModar(src, e, _imgContainer)
+        })
+    }else{
+        _imgContainer.querySelector('.btn-open-modal').addEventListener('click',(e)=>{
+            openCropModar(src, e, _imgContainer)
+        })
+    }
     
 }
 
