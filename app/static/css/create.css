@@ -380,6 +380,9 @@ form[name="gallery-info"] div.gallery-image:nth-child(n+10) {
   gap: 5px;
   flex: 1;
 }
+[name="account-number-info"] input {
+  max-width: 220px;
+}
 .account-data input {
   height: 38px;
 }
