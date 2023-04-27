@@ -61,12 +61,16 @@ const setHasImg = (_imgContainer, canvas) => {
     _imgContainer.appendChild(canvas);
     _imgContainer.insertAdjacentHTML('beforeend',closeDiv);
     _imgContainer.querySelector('.btn-delete-img').addEventListener('click',(e)=>clickDeleteImg(e))
+    _imgContainer.querySelector('.btn-delete-img').addEventListener('touchstart',(e)=>clickDeleteImg(e))
 }
 // 갤러리 이미지 추가 시 html 세팅
 const setGalleryHasImg = (_imgContainer, src) => {
     const EditButton = `<button class="btn-open-modal">썸네일 편집</button>`
     _imgContainer.insertAdjacentHTML('beforeend',EditButton);
     _imgContainer.querySelector('.btn-open-modal').addEventListener('click',(e)=>{
+        openCropModar(src, e, _imgContainer)
+    })
+    _imgContainer.querySelector('.btn-open-modal').addEventListener('touchstart',(e)=>{
         openCropModar(src, e, _imgContainer)
     })
     
