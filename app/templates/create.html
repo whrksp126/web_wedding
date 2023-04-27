@@ -88,13 +88,11 @@
                         <h4>아버님</h4>
                         <input type="text" name="bride father lastName" placeholder="성" data-type="bride_dict"  data-name="fatherLastName" value="{{bride_dict.fatherLastName}}">
                         <input type="text" name="bride father firstName" placeholder="이름" data-type="bride_dict"  data-name="fatherFirstName" value="{{bride_dict.fatherFirstName}}">
-                        <input type="checkbox" name="bride father dead-state">
                     </div>
                     <div>
                         <h4>어머님</h4>
                         <input type="text" name="bride mother lastName" placeholder="성" data-type="bride_dict"  data-name="motherLastName" value="{{bride_dict.motherLastName}}">
                         <input type="text" name="bride mother firstName" placeholder="이름" data-type="bride_dict"  data-name="motherFirstName" value="{{bride_dict.motherFirstName}}">
-                        <input type="checkbox" name="bride mother dead-state">
                     </div>
                     <div>
                         <h4>관계</h4>
@@ -347,7 +345,7 @@
                     {% set group_index = loop.index %}
                     <div>
                         <h4>그룹명</h4>
-                        <input type="text"  placeholder="신랑측" data-type="bank_acc" data-name="group_name" value="{{bank.group_name}}">
+                        <input type="text" readonly disabled placeholder="신랑측" data-type="bank_acc" data-name="group_name" value="{{bank.group_name}}">
                     </div>
                     <br>
 
@@ -355,7 +353,7 @@
                         <div class="{{ 'first' if loop.index0 == 0 else 'other'}} bank-number-{{group_index}}">
                             <h4>계좌번호</h4>
                             <div class="account-data">
-                                <input  type="text" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="{{bank_data.bank}}">
+                                <input type="text" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="{{bank_data.bank}}">
                                 <input type="text" placeholder="계좌번호" data-type="bank_acc" data-name="list" list-type="number" value="{{bank_data.number}}">
                             </div>
                         </div>
