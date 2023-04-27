@@ -392,7 +392,7 @@ if(document.querySelector('[name="reservation-info"] [type="date"]').value == ''
 
 const _gallery = document.querySelector('form[name="gallery-info"] div')
 let sortable = Sortable.create(_gallery,{
-    delayOnTouchOnly : true,
+    touchAction: 'none',
     draggable: '.hasImg'
 });
 
