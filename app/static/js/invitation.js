@@ -372,5 +372,5 @@ function naverMap() {
   //   dlng=127.1230074&
   //   dname=%EC%98%AC%EB%A6%BC%ED%94%BD%EA%B3%B5%EC%9B%90&
   //   appname=com.example.myapp`
-  window.location.href = `nmap://route/car?slat=37.4640070&slng=126.9522394&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=37.5209436&dlng=127.1230074&dname=%EC%98%AC%EB%A6%BC%ED%94%BD%EA%B3%B5%EC%9B%90&appname=wedding`;
+  window.location.href = `nmap://route/car?slat=37.4640070&slng=126.9522394&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${wedding_schedule_dict.lat}&dlng=${wedding_schedule_dict.lng}&dname=${wedding_schedule_dict.hall_addr}&appname=wedding`;
 }
