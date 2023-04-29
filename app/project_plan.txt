@@ -199,7 +199,7 @@ template create db에 넣기(html텍스트, 이미지 제외)
   방명록 3개 슬라이드 구현
   네이버 지도, T Map, 카카오 맵 바로가기 버튼 구현
   gunicorn을 이용한 웹 서버 실행
-
+  개발용 브랜치 만들기
 
 --DB(tim pc vmware ubuntu server)-- 
 Hostname: 1.220.211.20

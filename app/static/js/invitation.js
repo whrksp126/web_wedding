@@ -352,3 +352,10 @@ const hiddenModal = () => {
   document.querySelector('#modal-container').remove();
   document.querySelector('body').style.overflow='initial';
 }
+
+// 카카오 내비
+function navigation(){
+  
+  var loca = `https://map.kakao.com/link/to/${wedding_schedule_dict.hall_addr},${wedding_schedule_dict.lat},${wedding_schedule_dict.lng}`
+  window.location.href=loca;
+}
