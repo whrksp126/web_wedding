@@ -367,6 +367,6 @@ function naverMap() {
   window.location.href = `nmap://route/car?dlat=${wedding_schedule_dict.lat}&dlng=${wedding_schedule_dict.lng}&dname=${wedding_schedule_dict.hall_name}&appname=wedding`;
 }
 function tMap(){
-  const url = `tmap://search?rGoName=${wedding_schedule_dict.hall_name}&lon=${wedding_schedule_dict.lng}&lat=${wedding_schedule_dict.lat}`;
+  const url = `tmap://rGoName?name=${wedding_schedule_dict.hall_name}&lon=${wedding_schedule_dict.lng}&lat=${wedding_schedule_dict.lat}`;
   window.location.href = url;
 }
