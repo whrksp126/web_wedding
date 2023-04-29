@@ -365,9 +365,9 @@ function navigation(){
 Kakao.init('19e6d6ca2612380690e073e3e59433ec'); // 사용하려는 앱의 JavaScript 키 입력
 function shareLocation() {
   Kakao.Navi.share({
-    name: `${wedding_schedule_dict.hall_name}`,
-    x: `${wedding_schedule_dict.lat}`,
-    y: `${wedding_schedule_dict.lng}`,
+    name: `${wedding_schedule_dict.hall_addr}`,
+    x: Number(`${wedding_schedule_dict.lng}`),
+    y: Number(`${wedding_schedule_dict.lat}`),
     coordType: 'wgs84',
   });
 }
