@@ -356,7 +356,7 @@ const hiddenModal = () => {
 // 카카오 내비
 function kakaoMap() {
   Kakao.Navi.share({
-    name: `${wedding_schedule_dict.hall_addr}`,
+    name: `${wedding_schedule_dict.hall_name}`,
     x: Number(`${wedding_schedule_dict.lng}`),
     y: Number(`${wedding_schedule_dict.lat}`),
     coordType: 'wgs84',
