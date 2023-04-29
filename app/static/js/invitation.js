@@ -358,4 +358,16 @@ function navigation(){
   
   var loca = `https://map.kakao.com/link/to/${wedding_schedule_dict.hall_addr},${wedding_schedule_dict.lat},${wedding_schedule_dict.lng}`
   window.location.href=loca;
+  
+}
+
+
+Kakao.init('19e6d6ca2612380690e073e3e59433ec'); // 사용하려는 앱의 JavaScript 키 입력
+function shareLocation() {
+  Kakao.Navi.share({
+    name: '현대백화점 판교점',
+    x: 127.11205203011632,
+    y: 37.39279717586919,
+    coordType: 'wgs84',
+  });
 }
