@@ -262,3 +262,93 @@ const getNumber = (type, detail) => {
   }
   return phoneNumber
 }
+
+// 방명록 전송하기
+const submitGuestbook = () => {
+  const name = document.querySelector('.c-guestbook-delete-modal input[type="text"]').value
+  const password = document.querySelector('.c-guestbook-delete-modal input[type="password"]').value
+  const content = document.querySelector('.c-guestbook-delete-modal textarea').value
+  const postData = new Object();
+  postData.name = name
+  postData.password = password
+  postData.content = content
+  // search_geocoding
+  fetch('set_gusetbook', {
+      method: 'POST', // 요청 메서드
+      headers: {
+        'Content-Type': 'application/json' // 요청 헤더 설정
+      },
+      body: JSON.stringify(postData) // 요청 바디에 보낼 데이터
+  })
+  .then(response => response.json()) // 응답 데이터를 JSON으로 파싱
+  .then(result => {
+      // 성공적으로 응답 받았을 때 실행할 코드 작성
+      console.log(result)
+      // console.log(result);
+  })
+  .catch(error => {
+      // 요청이 실패했을 때 실행할 코드 작성
+      console.error(error);
+  });
+
+}
+
+// 방명록 삭제 모달 열기
+const openModalDeleteGusetbook = (id) => {
+  let html = `
+    <div id="modal-container">
+      <form class="modal-content" onsubmit="deleteGuestBook(${id},event)">
+        <div class="top">
+          <h3>방명록 삭제</h3>
+          <button onclick="hiddenModal()"><i class="ph-bold ph-x"></i></button>
+        </div> 
+        <div class="middle">
+          <label for="gustBook_password">비밀번호 :</label>
+          <input id="gustBook_password" type="password" placeholder="비밀번호" onkeypress="if(event.keyCode == 13) { deleteGuestBook(${id},event) }"> 
+        </div> 
+        <button class="bottom" type="submit">
+          삭제하기
+        </button> 
+      </form>
+    </div>
+  `
+  document.querySelector('body').insertAdjacentHTML('beforeend', html);
+  document.querySelector('body').style.overflow='hidden';
+  document.querySelector('#modal-container').addEventListener('click', (e)=>{
+    if(e.target.id == 'modal-container') {
+      hiddenModal()
+    }
+  })
+}
+// 방명록 삭제
+const deleteGuestBook = (id, event) => {
+  console.log('실행됨')
+  event.preventDefault();
+  const password = document.querySelector('#gustBook_password').value
+  const postData = new Object();
+  postData.password = password
+  postData.id = id
+  fetch('delete_gusetbook', {
+    method: 'POST', // 요청 메서드
+    headers: {
+      'Content-Type': 'application/json' // 요청 헤더 설정
+    },
+    body: JSON.stringify(postData) // 요청 바디에 보낼 데이터
+  })
+  .then(response => response.json()) // 응답 데이터를 JSON으로 파싱
+  .then(result => {
+      // 성공적으로 응답 받았을 때 실행할 코드 작성
+      console.log(result)
+      hiddenModal()
+      // console.log(result);
+  })
+  .catch(error => {
+      // 요청이 실패했을 때 실행할 코드 작성
+      console.error(error);
+  });
+}
+// 모달 닫기
+const hiddenModal = () => {
+  document.querySelector('#modal-container').remove();
+  document.querySelector('body').style.overflow='initial';
+}

@@ -252,7 +252,37 @@ def search_geocoding():
         response.status_code = 200
         return response
 
+@app.route("/set_gusetbook", methods=['GET', 'POST'])
+def set_gusetbook():
+    if request.method == 'POST':
+        data = request.get_json()
+        name = data['name']
+        password = data['password']
+        content = data['content']
+        # 클레어 방명록 추가 ("created_at":"2021.08.08" 이것도 같이요!!)
+        print(name, password, content)
+        response = jsonify({
+            'message': 'Success'
+        })
+        response.status_code = 200
+        return response
 
+@app.route("/delete_gusetbook", methods=['GET', 'POST'])
+def delete_gusetbook():
+    if request.method == 'POST':
+        data = request.get_json()
+        password = data['password']
+        id = data['id']
+        print('password,',password)
+        print('id,',id)
+        # 클레어 방명록 삭제 쿼리 부탁드립니다~
+        response = jsonify({
+            'message': 'Success'
+        })
+        response.status_code = 200
+        return response
+    
+    
 # @app.route("/create_account", methods=['GET', 'POST'])
 # def create_account():
 #     name = request.form.get('name')

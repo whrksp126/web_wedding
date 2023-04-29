@@ -114,18 +114,24 @@ message_templates_dict = {
 
 guestbook_list = [
     {
+        "id" : 1,
         "name":"김주리",
         "content_guestbook":"지혁씨 많이많이 축하합니다!! 함께 걸어가는 길에 꽃길만🌸🌼🌿",
+        "password": 'test',
         "created_at":"2021.08.08"
     },
     {
+        "id" : 2,
         "name":"박수림",
         "content_guestbook":"결혼 축하드려요🎉<br>이렇게 두 분의 결혼을 축하할 수 있어 너무 너무 기쁩니다!! 늘 건강하고 행복한 가정되시길 기도하고 응원할게요🌼",
+        "password": 'test',
         "created_at":"2021.08.08"
     },
     {
+        "id" : 3,
         "name":"윤지",
         "content_guestbook":"유라야💕 너무 이쁘다 러블리하구 봄바람에 흩날리는 민들레꽃씨같아! 행복행복기운이 뿜뿜한다! 평생 이쁘고 행복하게 잘살거같아 나는 걱정이 하나도 없어❣️축하해💝",
+        "password": 'test',
         "created_at":"2021.08.08"
     }
 ]

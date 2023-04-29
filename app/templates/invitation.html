@@ -12,7 +12,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Source+Sans+Pro:wght@200&display=swap" rel="stylesheet">
-
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../static/css/reset.css" >
     <link rel="stylesheet" href="../static/css/invitation.css" >
@@ -413,7 +414,7 @@
                         <div class="item">
                             <div class="close">
                                 <span class="date">{{guestbook.created_at}}</span>
-                                <span class="icon">
+                                <span class="icon" onclick="openModalDeleteGusetbook({{ guestbook.id }})">
                                     <svg data-name="Layer 1" id="Layer_1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
                                         <title></title>
                                         <path d="M8.25,0,32,23.75,55.75,0,64,8.25,40.25,32,64,55.75,55.75,64,32,40.25,8.25,64,0,55.75,23.75,32,0,8.25Z" data-name="<Compound Path>" id="_Compound_Path_"></path>
@@ -445,7 +446,7 @@
                                             </div>
                                         </div>
                                         <div class="action">
-                                            <button disabled="disabled">작성하기</button>
+                                            <button onclick="submitGuestbook()">작성하기</button>
                                         </div>
                                     </div>
                                 </div>
