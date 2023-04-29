@@ -412,8 +412,26 @@ const openPostCode = (str=null) => {
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
             // 예제를 참고하여 다양한 활용법을 확인해 보세요.
-            postApi('search_geocoding', JSON.stringify(data.address), setMarkerPosition)
+            const postData = new Object();
+            postData.address = data.address
             // search_geocoding
+            fetch('search_geocoding', {
+                method: 'POST', // 요청 메서드
+                headers: {
+                  'Content-Type': 'application/json' // 요청 헤더 설정
+                },
+                body: JSON.stringify(postData) // 요청 바디에 보낼 데이터
+            })
+            .then(response => response.json()) // 응답 데이터를 JSON으로 파싱
+            .then(result => {
+                // 성공적으로 응답 받았을 때 실행할 코드 작성
+                setMarkerPosition(result)
+                // console.log(result);
+            })
+            .catch(error => {
+                // 요청이 실패했을 때 실행할 코드 작성
+                console.error(error);
+            });
 
         }
     }).open({
@@ -422,10 +440,8 @@ const openPostCode = (str=null) => {
 }
 
 // 위도 경도 좌표 찍기
-const lat_lng = wedding_schedule_dict.lat_lng
-
 const createMapOptions = {
-    center: new naver.maps.LatLng(lat_lng[0], lat_lng[1]), //지도의 초기 중심 좌표
+    center: new naver.maps.LatLng(wedding_schedule_dict.lat, wedding_schedule_dict.lng), //지도의 초기 중심 좌표
     zoom: 16, //지도의 초기 줌 레벨
     minZoom: 7, //지도의 최소 줌 레벨
     zoomControl: false, //줌 컨트롤의 표시 여부
@@ -436,15 +452,20 @@ const createMapOptions = {
 const createMap = new naver.maps.Map('createMap', createMapOptions);
 const createMarker = new naver.maps.Marker({
     map: createMap,
-    position: new naver.maps.LatLng(lat_lng[0], lat_lng[1])
+    position: new naver.maps.LatLng(wedding_schedule_dict.lat, wedding_schedule_dict.lng)
 })
 
 function setMarkerPosition(data) {
-    const lat = data.data[0];
-    const lng = data.data[1];
-    let newLatLng = new naver.maps.LatLng(lat, lng);
+    const lat_lng = data.data.lat_lng
+    const address = data.data.address;
+    let newLatLng = new naver.maps.LatLng(lat_lng[0], lat_lng[1]);
     createMarker.setPosition(newLatLng);
     createMap.setCenter(newLatLng);
+    document.querySelector('input[name="wedding-place addr"]').value = address
+    const __input = document.querySelectorAll('input[name="wedding-place lat_lng"]')
+    __input.forEach((_input, index)=>{
+        _input.value = lat_lng[index]
+    })
 }
 
 // setOptions 메서드를 이용해 옵션을 조정할 수도 있습니다.

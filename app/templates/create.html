@@ -219,7 +219,8 @@
                         <h4>주소</h4>
                         <input type="text" size="1" name="wedding-place addr" data-type="wedding_schedule_dict"  data-name="hall_addr" value="{{wedding_schedule_dict.hall_addr}}">
                         <div onclick="openPostCode()" class="map-search-btn">검색</div>
-                        
+                        <input type="text" hidden name="wedding-place lat_lng" data-type="wedding_schedule_dict"  data-name="lat" value="{{wedding_schedule_dict.lat}}">
+                        <input type="text" hidden name="wedding-place lat_lng" data-type="wedding_schedule_dict"  data-name="lng" value="{{wedding_schedule_dict.lng}}">
                     </div>
                     <div id="createMap" style="width:100%; height:240px; max-width: 508px;
                     border: 1px solid #ddd;

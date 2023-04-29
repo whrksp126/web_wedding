@@ -141,7 +141,7 @@ def create():
         
     if request.method == 'POST':
         print("comming?")
-        # data = request.get_json()
+        # json_data = request.get_json()
         json_data = json.loads(request.form.get('json'))
         print("@#$",type(json_data))
 
@@ -234,6 +234,25 @@ def create():
     response.status_code = 200
     return response
 
+
+@app.route("/search_geocoding", methods=['GET', 'POST'])
+def search_geocoding():
+    if request.method == 'POST':
+        data = request.get_json()
+        address = data['address']
+        lat_lng = geocoding(address);
+        print(address, lat_lng)
+        response = jsonify({
+            'data' : {
+                'lat_lng' : lat_lng , 
+                'address' : address
+            },
+            'message': 'Success'
+            })
+        response.status_code = 200
+        return response
+
+
 # @app.route("/create_account", methods=['GET', 'POST'])
 # def create_account():
 #     name = request.form.get('name')
@@ -248,19 +267,6 @@ def create():
 #             db_session.refresh(user_item)
 
 #     return render_template('/create.html')
-
-
-@app.route("/search_geocoding", methods=['GET', 'POST'])
-def search_geocoding():
-    if request.method == 'POST':
-        address = request.get_json()
-        lat_lon = geocoding(address);
-        response = jsonify({
-            'data' : lat_lon,
-            'message': 'Success'
-            })
-        response.status_code = 200
-        return response
 
 if __name__ == '__main__':
     app.run()

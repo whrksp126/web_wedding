@@ -71,7 +71,9 @@ wedding_schedule_dict = {
     'hall_name' : "아펠가모 광화문",
     'hall_floor' : "B2 로스타뇨홀",
     'hall_addr' : "서울 종로구 종로1길 50",  #db이름수정
-    'lat_lng' : [37.3595704, 127.105399]
+    # 'lat_lng' : [37.3595704, 127.105399],
+    'lat' : '37.3595704',
+    'lng' : '127.105399'
 }
 
 transport_list = [

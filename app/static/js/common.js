@@ -1,5 +1,6 @@
 // fetch Api를 이용한 Post 요청 함수
 const postApi = (url, data, successFun) => {
+  console.log(url)
   fetch(url, {
     method: 'POST', // 요청 메서드
     // headers: {
