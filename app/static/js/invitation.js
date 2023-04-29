@@ -248,7 +248,7 @@ function makeCall(type, detail) {
 // 문자 전송
 function sendMessage(type, detail) {
   const phoneNumber = getNumber(type, detail)
-  var message = '안녕하세요, 문자메시지 예제입니다.'; // 보낼 문자메시지를 변수에 저장합니다.
+  var message = ''; // 보낼 문자메시지를 변수에 저장합니다.
   var smsLink = 'sms:' + phoneNumber + '?body=' + message; // 문자메시지를 URI Scheme으로 변환합니다.
   window.location.href = smsLink; // 문자메시지를 보내도록 URI Scheme을 사용하여 링크를 엽니다.
 }
