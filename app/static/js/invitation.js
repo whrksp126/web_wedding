@@ -40,7 +40,7 @@ const closeImgSlider = () => {
 // 위도 경도 좌표 찍기
 const lat_lng = wedding_schedule_dict.lat_lng
 const mapOptions = {
-  center: new naver.maps.LatLng(lat_lng[0], lat_lng[1]), //지도의 초기 중심 좌표
+  center: new naver.maps.LatLng(wedding_schedule_dict.lat, wedding_schedule_dict.lng), //지도의 초기 중심 좌표
   zoom: 16, //지도의 초기 줌 레벨
   minZoom: 7, //지도의 최소 줌 레벨
   zoomControl: false, //줌 컨트롤의 표시 여부
@@ -51,7 +51,7 @@ const mapOptions = {
 const map = new naver.maps.Map('map', mapOptions);
 new naver.maps.Marker({
   map: map,
-  position: new naver.maps.LatLng(lat_lng[0], lat_lng[1])
+  position: new naver.maps.LatLng(wedding_schedule_dict.lat, wedding_schedule_dict.lng)
 })
 
 // setOptions 메서드를 이용해 옵션을 조정할 수도 있습니다.
@@ -237,3 +237,28 @@ copyButton.addEventListener('click', function() {
     ]
   });
 //]]>
+
+
+// 전화 걸기
+function makeCall(type, detail) {
+  const phoneNumber = getNumber(type, detail)
+  const phoneLink = 'tel:' + phoneNumber; // 전화번호를 URI Scheme으로 변환합니다.
+  window.location.href = phoneLink; // 전화를 걸도록 URI Scheme을 사용하여 링크를 엽니다.
+}
+// 문자 전송
+function sendMessage(type, detail) {
+  const phoneNumber = getNumber(type, detail)
+  var message = '안녕하세요, 문자메시지 예제입니다.'; // 보낼 문자메시지를 변수에 저장합니다.
+  var smsLink = 'sms:' + phoneNumber + '?body=' + message; // 문자메시지를 URI Scheme으로 변환합니다.
+  window.location.href = smsLink; // 문자메시지를 보내도록 URI Scheme을 사용하여 링크를 엽니다.
+}
+const getNumber = (type, detail) => {
+  let phoneNumber;
+  if(type == 'groom_dict') {
+    phoneNumber = groom_dict[detail]
+  }
+  if(type == 'bride_dict') {
+    phoneNumber = bride_dict[detail]
+  }
+  return phoneNumber
+}

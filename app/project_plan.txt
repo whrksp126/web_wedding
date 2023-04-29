@@ -189,7 +189,7 @@ template create db에 넣기(html텍스트, 이미지 제외)
 
 =================================
 팀)
-  위치 좌표 보내기
+  위치 좌표 보내기 (완료)
   전화 번호, 문자 전송 버튼 기능 구현
   방명록 작성하기 전송 기능 구현
   
@@ -205,7 +205,18 @@ port forwarding: 1.220.211.20:20233 >> 192.168.0.202:3306
 vmware network : bridge(host pc 와 동일한 ip, port 사용)
 
 
+# invitation_wedding_template
 
+https://m.smartstore.naver.com/from-today/products/5394629172?
+
+
+naver
+Client ID	aQWBlcz61j0irjwhG4wH
+Client Secret	WHMI4vcmnZ
+
+kakao
+JavaScript 키	 19e6d6ca2612380690e073e3e59433ec
+REST API 키 	eb6c6b0e71b4c28214b25cf47321d87d
 
 
 
