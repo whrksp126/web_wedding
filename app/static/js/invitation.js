@@ -354,20 +354,15 @@ const hiddenModal = () => {
 }
 
 // 카카오 내비
-function navigation(){
-  
-  var loca = `https://map.kakao.com/link/to/${wedding_schedule_dict.hall_addr},${wedding_schedule_dict.lat},${wedding_schedule_dict.lng}`
-  window.location.href=loca;
-  
-}
-
-
-Kakao.init('19e6d6ca2612380690e073e3e59433ec'); // 사용하려는 앱의 JavaScript 키 입력
-function shareLocation() {
+function kakaoMap() {
   Kakao.Navi.share({
     name: `${wedding_schedule_dict.hall_addr}`,
     x: Number(`${wedding_schedule_dict.lng}`),
     y: Number(`${wedding_schedule_dict.lat}`),
     coordType: 'wgs84',
   });
+}
+// 네이버 지도 내비
+function naverMap() {
+  window.location.href = `nmap://route/car?dlat=37.5209436&dlng=127.1230074&appname=wedding`;
 }
