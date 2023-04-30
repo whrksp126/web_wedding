@@ -1,7 +1,7 @@
 # File name: gunicorn.config.socket.py
 
 import multiprocessing
-workers = multiprocessing.cpu_count() * 2 + 1
+workers = multiprocessing.cpu_count()
 
 # Nginx server 블록에서 설정한 내부 소켓 경로 사용
 bind = 'unix:/tmp/app.sock'
