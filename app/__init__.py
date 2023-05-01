@@ -173,7 +173,12 @@ def create():
             db_session.commit()
 
             # 계좌
-            # 계좌 디비 좀 수정해야할듯
+            for i, bank in enumerate(bank_acc):
+                for b in bank['list']:
+                    account_item = Account(b['bank'], b['number'], b['name'], i+1, 5)
+                    db_session.add(account_item)
+                    db_session.commit()
+                    db_session.refresh(account_item)
 
             # 대중교통
             for i, t in enumerate(transport_list):
@@ -181,8 +186,6 @@ def create():
                 db_session.add(transport_item)
                 db_session.commit()
                 db_session.refresh(transport_item)
-
-
 
 
         print(request.files)
@@ -211,6 +214,22 @@ def create():
         # if 'main_img' in request.files:
         #   file = request.files['main_img']
         # print(f'{file.filename} uploaded successfully')
+
+
+        import os
+
+        IMAGES_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
+        folder_name = '5'
+
+        folder_path = os.path.join(IMAGES_FOLDER, folder_name)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        if main_img_file:
+            # filename = file.filename
+            main_img_file.save(folder_path+"/"+'main_img.jpg')
+
+
 
         json_data = request.form.get('json')
         if json_data:
