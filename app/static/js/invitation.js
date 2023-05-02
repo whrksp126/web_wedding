@@ -196,16 +196,17 @@ document.querySelector('#popup_1').addEventListener('change', function() {
   }
 });
 
-// 청첩장 주소 복사하기
-const copyButton = document.querySelector('#btn-url-copy');
-copyButton.addEventListener('click', function() {
-  const currentUrl = window.location.href;
-  navigator.clipboard.writeText(currentUrl)
-    .then(() => {
-      alert('현재 페이지 URL이 복사되었습니다.');
-    })
-    .catch((err) => {
-      console.error('현재 페이지 URL을 복사하는 중 오류가 발생했습니다:', err);
+// 복사하기
+const __copyButton = document.querySelectorAll('.copy-text');
+__copyButton.forEach((copyButton)=>{
+  copyButton.addEventListener('click', (e) => {
+    navigator.clipboard.writeText(e.currentTarget.getAttribute("data-target"))
+      .then(() => {
+        alert('클립보드에 복사됨');
+      })
+      .catch((err) => {
+        console.error('복사하는 중 오류가 발생했습니다:', err);
+      });
     });
 });
 

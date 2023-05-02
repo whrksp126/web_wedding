@@ -347,9 +347,20 @@
                 <div>
                     <div id="map" style="width:100%;height:240px;"></div>
                     <div>
-                        <button onclick="naverMap()">네이버 지도</button>
-                        <button onclick="kakaoMap()">카카오 맵</button>
-                        <button onclick="tMap()">T 맵</button>
+                        <div class="c-map-navi gothic">
+                            <button onclick="naverMap()" class="navi">
+                                <img src="/static/images/icon_image/icon_navermap_w48.png">
+                                <span>네이버 지도</span>
+                            </button>
+                            <button onclick="kakaoMap()" class="navi">
+                                <img src="/static/images/icon_image/icon_kakaonavi_w48.png">
+                                <span>카카오 내비</span>
+                            </button>
+                            <button onclick="tMap()" class="navi">
+                                <img src="/static/images/icon_image/icon_tmap_w48.png">
+                                <span>티맵</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -400,7 +411,7 @@
                                     <span>{{bank_data.name}}</span>
                                 </div>
                                 <div>
-                                    <div class="btn-copy">복사하기</div>
+                                    <div class="btn-copy copy-text" data-target="{{bank_data.bank}} {{bank_data.number}}">복사하기</div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -471,7 +482,7 @@
                             카카오톡으로 공유하기
                         </span>
                     </a>
-                    <button class="btn-kakao" id="btn-url-copy">
+                    <button class="btn-kakao copy-text" id="btn-url-copy" data-target="{{ request.url }}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
                         </svg>
