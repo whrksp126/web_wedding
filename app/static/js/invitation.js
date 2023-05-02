@@ -200,7 +200,11 @@ document.querySelector('#popup_1').addEventListener('change', function() {
 const __copyButton = document.querySelectorAll('.copy-text');
 __copyButton.forEach((copyButton)=>{
   copyButton.addEventListener('click', (e) => {
-    navigator.clipboard.writeText(e.currentTarget.getAttribute("data-target"))
+    const dataTarget = e.currentTarget.getAttribute("data-target")
+    console.log(dataTarget)
+    console.log(navigator)
+
+    navigator.clipboard.writeText(dataTarget)
       .then(() => {
         alert('클립보드에 복사됨');
       })
