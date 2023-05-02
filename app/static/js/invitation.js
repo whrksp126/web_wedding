@@ -201,17 +201,18 @@ const __copyButton = document.querySelectorAll('.copy-text');
 __copyButton.forEach((copyButton)=>{
   copyButton.addEventListener('click', (e) => {
     const dataTarget = e.currentTarget.getAttribute("data-target")
-    console.log(dataTarget)
-    console.log(navigator)
-
-    navigator.clipboard.writeText(dataTarget)
-      .then(() => {
-        alert('클립보드에 복사됨');
-      })
-      .catch((err) => {
-        console.error('복사하는 중 오류가 발생했습니다:', err);
-      });
-    });
+    if(navigator.clipboard == undefined){
+      const textArea = document.createElement("textarea");
+      textArea.value = dataTarget;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }else{
+      navigator.clipboard.writeText(dataTarget)
+    }
+    alert('복사되었습니다');
+  });
 });
 
 // 카카오 공유하기 
