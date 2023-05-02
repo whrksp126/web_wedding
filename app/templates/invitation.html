@@ -492,11 +492,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ko0r34e7m9"></script>
-    <script 
-        src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
-        integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" 
-        crossorigin="anonymous">
-    </script>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js"
+  integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
     <script>
         // jinja2 데이터 받기
         const message_templates_dict = {{message_templates_dict|safe}}; 
@@ -505,6 +502,7 @@
         const wedding_schedule_dict = {{wedding_schedule_dict|safe}};
         const groom_dict = {{groom_dict|safe}}
         const bride_dict = {{bride_dict|safe}}
+        const image_list = {{image_list|safe}}
     </script>
     
     <script src="/static/js/common.js"></script>
