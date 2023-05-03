@@ -1,4 +1,9 @@
-
+.logout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
 .container {
   position: relative;
   padding: 40px;
