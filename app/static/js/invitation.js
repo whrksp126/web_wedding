@@ -111,7 +111,7 @@ function renderCalendar(data){
           h.push('</tr>')
           h.push('<tr>');
       };
-      h.push(`<td>
+      h.push(`<td class="animation-box order-${i%7}" data-animation="slide-up">
           <div id="calendar_${current_year}_${current_month}_${data[i]}" style="position: relative;">
               ${data[i]}
           </div>

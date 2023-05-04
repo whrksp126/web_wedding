@@ -62,7 +62,11 @@
           </div>
         </div>
       </div>
+      {% if session.get('user') %}
       <a class="logout" href="/logout">LogOut</a>
+      {% else %}
+      <a class="logout" href="/login">Login</a>
+      {% endif %}
     </section>
     <script src="/static/js/common.js"></script>
     <script src="/static/js/index.js"></script>

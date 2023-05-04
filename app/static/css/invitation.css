@@ -160,6 +160,7 @@
   vertical-align: middle;
   cursor: pointer;
   text-align: center;
+  line-height: 24px;
 }
 .phone-circle svg {
   width: 1.125rem;
@@ -562,20 +563,18 @@ input[id*=accordion]:checked + label .title > .arrow {
   line-height: 0;
   text-align: center;
   cursor: pointer;
+  color: #aaa;
+  font-size: 11px;
 }
 .c-guestbook .item .name {
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
 .c-guestbook .item .date {
-  color: #aaa;
   margin-right: 4px;
-  font-size: 11px;
 }
-.c-guestbook .item .close>.icon>svg {
-  width: 8px;
-  height: 8px;
-  fill: #aaa;
+.c-guestbook .item .close i{
+  line-height: 0;
 }
 .c-guestbook .item .text {
   line-height: 1.25rem;
