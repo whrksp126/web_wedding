@@ -115,7 +115,6 @@
   color: rgb(191,131,98);
 }
 #app-container .invitation_message > div > div:nth-child(2){
-  opacity: 1;
   transform: translate(0px, 0px);
   margin: 2rem 1rem 1.2rem;
   font-size: .9rem;

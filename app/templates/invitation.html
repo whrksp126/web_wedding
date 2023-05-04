@@ -53,13 +53,13 @@
             </div>
             
             <div class="invitation_message">
-                <div class="animation-box" data-animation="slide-up">
+                <div>
                     <div class="animation-box" data-animation="slide-up">초대합니다</div>
-                    <div data-type="message" message-type="sub"></div>
+                    <div class="animation-box" data-animation="slide-up" data-type="message" message-type="sub"></div>
                     <div>
-                        <img src="{{image_list.sub_img}}" alt="웨딩 서브 이미지">
+                        <img class="animation-box" data-animation="slide-up" src="{{image_list.sub_img}}" alt="웨딩 서브 이미지">
                     </div>
-                    <div >
+                    <div>
                         <div class="animation-box" data-animation="slide-up">
                             <span>
                                 <span>
@@ -95,8 +95,8 @@
                             </span>
                         </div>
                     </div>
-                    <div>
-                        <input type="checkbox" id="popup_1">
+                    <div >
+                        <input type="checkbox" id="popup_1" hidden>
                         <label for="popup_1" class="contact-box animation-box" data-animation="slide-up">혼주에게 연락하기</label>
                         <div>
                             <div class="contact-modal-wrap">
