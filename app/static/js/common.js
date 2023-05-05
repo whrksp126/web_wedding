@@ -1,5 +1,6 @@
 // fetch Api를 이용한 Post 요청 함수
 const postApi = (url, data, successFun) => {
+  console.log(url)
   fetch(url, {
     method: 'POST', // 요청 메서드
     // headers: {
@@ -29,3 +30,10 @@ const insertHTML = (element, dataDict) => {
   })
 }
 
+// 모바일 Browser Bottom, Top Bar 영역 vh 설정
+function setScreenSize() {
+	let vh = window.innerHeight * 0.01;
+	document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+setScreenSize();
+window.addEventListener('resize', setScreenSize);

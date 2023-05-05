@@ -187,9 +187,21 @@ template create db에 넣기(html텍스트, 이미지 제외)
   초기 값 없을 때 출력 코드 짜기(완료)
 
 
+=================================
+팀)
+  위치 좌표 보내기 (완료)
+  전화 번호, 문자 전송 버튼 기능 구현 (완료)
+  방명록 작성하기 전송 기능 구현 (완료)
 
-
-
+팀)
+  계좌번호 복사하기 기능 구현
+  아이콘 phosphoricons 로 변경
+  등장 에니메이션 적용
+  방명록 3개 슬라이드 구현
+  달력 슬라이드 기능 구현
+  네이버 지도, T Map, 카카오 맵 바로가기 버튼 구현
+  gunicorn을 이용한 웹 서버 실행
+  개발용 브랜치 만들기
 
 --DB(tim pc vmware ubuntu server)-- 
 Hostname: 1.220.211.20
@@ -200,7 +212,18 @@ port forwarding: 1.220.211.20:20233 >> 192.168.0.202:3306
 vmware network : bridge(host pc 와 동일한 ip, port 사용)
 
 
+# invitation_wedding_template
 
+https://m.smartstore.naver.com/from-today/products/5394629172?
+
+
+naver
+Client ID	aQWBlcz61j0irjwhG4wH
+Client Secret	WHMI4vcmnZ
+
+kakao
+JavaScript 키	 19e6d6ca2612380690e073e3e59433ec
+REST API 키 	eb6c6b0e71b4c28214b25cf47321d87d
 
 
 

@@ -60,15 +60,25 @@ const setHasImg = (_imgContainer, canvas) => {
     _imgContainer.classList.add('hasImg');
     _imgContainer.appendChild(canvas);
     _imgContainer.insertAdjacentHTML('beforeend',closeDiv);
-    _imgContainer.querySelector('.btn-delete-img').addEventListener('click',(e)=>clickDeleteImg(e))
+    const btnDeleteImg = _imgContainer.querySelector('.btn-delete-img');
+    // 모바일 일 경우 touchstart
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        btnDeleteImg.addEventListener('touchend',(e)=>{setTimeout(() => {clickDeleteImg(e)}, 100)})
+    }else {
+        btnDeleteImg.addEventListener('click',(e)=>clickDeleteImg(e))
+    }
 }
 // 갤러리 이미지 추가 시 html 세팅
 const setGalleryHasImg = (_imgContainer, src) => {
     const EditButton = `<button class="btn-open-modal">썸네일 편집</button>`
     _imgContainer.insertAdjacentHTML('beforeend',EditButton);
-    _imgContainer.querySelector('.btn-open-modal').addEventListener('click',(e)=>{
-        openCropModar(src, e, _imgContainer)
-    })
+    const btnOpenModal = _imgContainer.querySelector('.btn-open-modal');
+    // 모바일 일 경우 touchstart
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        btnOpenModal.addEventListener('touchend',(e)=>openCropModar(src, e, _imgContainer))
+    }else{
+        btnOpenModal.addEventListener('click',(e)=>openCropModar(src, e, _imgContainer))
+    }
     
 }
 
@@ -392,6 +402,8 @@ if(document.querySelector('[name="reservation-info"] [type="date"]').value == ''
 
 const _gallery = document.querySelector('form[name="gallery-info"] div')
 let sortable = Sortable.create(_gallery,{
+    delayOnTouchOnly: true, // 사용자가 터치를 사용하는 경우에만 지연
+	touchStartThreshold: 10, // px, 지연된 드래그 이벤트를 취소하기 전에 점이 이동해야 하는 픽셀 수
     draggable: '.hasImg'
 });
 
@@ -400,8 +412,26 @@ const openPostCode = (str=null) => {
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
             // 예제를 참고하여 다양한 활용법을 확인해 보세요.
-            postApi('search_geocoding', JSON.stringify(data.address), setMarkerPosition)
+            const postData = new Object();
+            postData.address = data.address
             // search_geocoding
+            fetch('search_geocoding', {
+                method: 'POST', // 요청 메서드
+                headers: {
+                  'Content-Type': 'application/json' // 요청 헤더 설정
+                },
+                body: JSON.stringify(postData) // 요청 바디에 보낼 데이터
+            })
+            .then(response => response.json()) // 응답 데이터를 JSON으로 파싱
+            .then(result => {
+                // 성공적으로 응답 받았을 때 실행할 코드 작성
+                setMarkerPosition(result)
+                // console.log(result);
+            })
+            .catch(error => {
+                // 요청이 실패했을 때 실행할 코드 작성
+                console.error(error);
+            });
 
         }
     }).open({
@@ -410,10 +440,8 @@ const openPostCode = (str=null) => {
 }
 
 // 위도 경도 좌표 찍기
-const lat_lng = wedding_schedule_dict.lat_lng
-
 const createMapOptions = {
-    center: new naver.maps.LatLng(lat_lng[0], lat_lng[1]), //지도의 초기 중심 좌표
+    center: new naver.maps.LatLng(wedding_schedule_dict.lat, wedding_schedule_dict.lng), //지도의 초기 중심 좌표
     zoom: 16, //지도의 초기 줌 레벨
     minZoom: 7, //지도의 최소 줌 레벨
     zoomControl: false, //줌 컨트롤의 표시 여부
@@ -424,15 +452,20 @@ const createMapOptions = {
 const createMap = new naver.maps.Map('createMap', createMapOptions);
 const createMarker = new naver.maps.Marker({
     map: createMap,
-    position: new naver.maps.LatLng(lat_lng[0], lat_lng[1])
+    position: new naver.maps.LatLng(wedding_schedule_dict.lat, wedding_schedule_dict.lng)
 })
 
 function setMarkerPosition(data) {
-    const lat = data.data[0];
-    const lng = data.data[1];
-    let newLatLng = new naver.maps.LatLng(lat, lng);
+    const lat_lng = data.data.lat_lng
+    const address = data.data.address;
+    let newLatLng = new naver.maps.LatLng(lat_lng[0], lat_lng[1]);
     createMarker.setPosition(newLatLng);
     createMap.setCenter(newLatLng);
+    document.querySelector('input[name="wedding-place addr"]').value = address
+    const __input = document.querySelectorAll('input[name="wedding-place lat_lng"]')
+    __input.forEach((_input, index)=>{
+        _input.value = lat_lng[index]
+    })
 }
 
 // setOptions 메서드를 이용해 옵션을 조정할 수도 있습니다.

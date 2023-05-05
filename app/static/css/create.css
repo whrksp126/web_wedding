@@ -79,10 +79,12 @@
 input[type="text"],
 input[type="date"],
 textarea,
-select {
+select,
+option {
   padding: 0 10px;
   border: 1px solid #ebebeb;
   font-size: 13px;
+  font-weight: 600;
   color: #111;
   background: #fafafa;
 }
@@ -378,18 +380,29 @@ form[name="gallery-info"] div.gallery-image:nth-child(n+10) {
   gap: 5px;
   flex: 1;
 }
+[name="account-number-info"] input {
+  max-width: 220px;
+}
 .account-data input {
   height: 38px;
+}
+.account-data input:first-child {
+  max-width: 80px;
+}
+.account-data input:last-child {
+  max-width: 130px;
 }
 
 /* 끝 계좌번호 */
 
 [name="guest-book-info"] input {
+  max-width: 220px;
   padding: 0 10px;
   border: 1px solid #ebebeb;
   font-size: 13px;
   color: #111;
   background: #fafafa;
+  
 }
 
 .card.card-submit {

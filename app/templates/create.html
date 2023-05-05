@@ -17,10 +17,7 @@
     <link rel="stylesheet" href="/static/css/create.css">
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css" rel="stylesheet">
 
-
-
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ko0r34e7m9"></script>
-
     <script src="https://unpkg.com/phosphor-icons"></script>
     <!-- tiny mce 텍스트 에디터 -->
     <script src="https://cdn.tiny.cloud/1/f9kc4lu9ej52cu9u6hcoqrflsjlfpb00kkj8dl4ngqmvbu1k/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
@@ -91,13 +88,11 @@
                         <h4>아버님</h4>
                         <input type="text" name="bride father lastName" placeholder="성" data-type="bride_dict"  data-name="fatherLastName" value="{{bride_dict.fatherLastName}}">
                         <input type="text" name="bride father firstName" placeholder="이름" data-type="bride_dict"  data-name="fatherFirstName" value="{{bride_dict.fatherFirstName}}">
-                        <input type="checkbox" name="bride father dead-state">
                     </div>
                     <div>
                         <h4>어머님</h4>
                         <input type="text" name="bride mother lastName" placeholder="성" data-type="bride_dict"  data-name="motherLastName" value="{{bride_dict.motherLastName}}">
                         <input type="text" name="bride mother firstName" placeholder="이름" data-type="bride_dict"  data-name="motherFirstName" value="{{bride_dict.motherFirstName}}">
-                        <input type="checkbox" name="bride mother dead-state">
                     </div>
                     <div>
                         <h4>관계</h4>
@@ -224,7 +219,8 @@
                         <h4>주소</h4>
                         <input type="text" size="1" name="wedding-place addr" data-type="wedding_schedule_dict"  data-name="hall_addr" value="{{wedding_schedule_dict.hall_addr}}">
                         <div onclick="openPostCode()" class="map-search-btn">검색</div>
-                        
+                        <input type="text" hidden name="wedding-place lat_lng" data-type="wedding_schedule_dict"  data-name="lat" value="{{wedding_schedule_dict.lat}}">
+                        <input type="text" hidden name="wedding-place lat_lng" data-type="wedding_schedule_dict"  data-name="lng" value="{{wedding_schedule_dict.lng}}">
                     </div>
                     <div id="createMap" style="width:100%; height:240px; max-width: 508px;
                     border: 1px solid #ddd;
@@ -350,7 +346,7 @@
                     {% set group_index = loop.index %}
                     <div>
                         <h4>그룹명</h4>
-                        <input type="text"  placeholder="신랑측" data-type="bank_acc" data-name="group_name" value="{{bank.group_name}}">
+                        <input type="text" readonly disabled placeholder="신랑측" data-type="bank_acc" data-name="group_name" value="{{bank.group_name}}">
                     </div>
                     <br>
 
@@ -358,7 +354,7 @@
                         <div class="{{ 'first' if loop.index0 == 0 else 'other'}} bank-number-{{group_index}}">
                             <h4>계좌번호</h4>
                             <div class="account-data">
-                                <input  type="text" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="{{bank_data.bank}}">
+                                <input type="text" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="{{bank_data.bank}}">
                                 <input type="text" placeholder="계좌번호" data-type="bank_acc" data-name="list" list-type="number" value="{{bank_data.number}}">
                             </div>
                         </div>
@@ -399,7 +395,7 @@
             <div class="card-top">
                 <button onclick="getInputData()">저장</button>
                 <button onclick="">삭제</button>
-                <a href="/home">돌아가기</a>
+                <a href="/">돌아가기</a>
             </div>
         </div>
 
