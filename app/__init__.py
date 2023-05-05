@@ -254,7 +254,12 @@ def create_app():
             # for gallery_img_sm in gallery_img_sms:
             #     gallery_img_sm.save(os.path.join(upload_path, gallery_img_sm.filename))
             # ============================================================================
-                
+            
+            # ===============================================================
+            # 클레어 브랜치 개발용으로 하나 더 만들었는데 develop 풀받아서 여기서 작업해주세요
+            # main 브랜치 데이터매니티처럼 실서버에서만 풀 받아서 작업하는 식으로 하는게 좋을 듯 합니다
+            # 결론 develop 풀 받고 작업하고 develop에 푸쉬 해주세여
+            # ===============================================================
             json_data = request.form.get('json')
             if json_data:
                 data = json.loads(json_data)
