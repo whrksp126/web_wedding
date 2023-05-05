@@ -111,7 +111,7 @@ function renderCalendar(data){
           h.push('</tr>')
           h.push('<tr>');
       };
-      h.push(`<td>
+      h.push(`<td class="animation-box order-${i%7}" data-animation="slide-up">
           <div id="calendar_${current_year}_${current_month}_${data[i]}" style="position: relative;">
               ${data[i]}
           </div>
@@ -196,17 +196,23 @@ document.querySelector('#popup_1').addEventListener('change', function() {
   }
 });
 
-// 청첩장 주소 복사하기
-const copyButton = document.querySelector('#btn-url-copy');
-copyButton.addEventListener('click', function() {
-  const currentUrl = window.location.href;
-  navigator.clipboard.writeText(currentUrl)
-    .then(() => {
-      alert('현재 페이지 URL이 복사되었습니다.');
-    })
-    .catch((err) => {
-      console.error('현재 페이지 URL을 복사하는 중 오류가 발생했습니다:', err);
-    });
+// 복사하기
+const __copyButton = document.querySelectorAll('.copy-text');
+__copyButton.forEach((copyButton)=>{
+  copyButton.addEventListener('click', (e) => {
+    const dataTarget = e.currentTarget.getAttribute("data-target")
+    if(navigator.clipboard == undefined){
+      const textArea = document.createElement("textarea");
+      textArea.value = dataTarget;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }else{
+      navigator.clipboard.writeText(dataTarget)
+    }
+    alert('복사되었습니다');
+  });
 });
 
 // 카카오 공유하기 
@@ -214,13 +220,13 @@ copyButton.addEventListener('click', function() {
   // // 사용할 앱의 JavaScript 키를 설정해 주세요.
   Kakao.init('19e6d6ca2612380690e073e3e59433ec');
   // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
-  Kakao.Link.createDefaultButton({
+  Kakao.Share.createDefaultButton({
     container: '#kakao-link-btn',
     objectType: 'feed',
     content: {
-      title: '{{groom_dict.lastname}}{{groom_dict.firstname}} ♥ {{bride_dict.lastname}}{{bride_dict.firstname}} 결혼합니다',
-      description: '{{wedding_schedule_dict.hall_detail}} {{wedding_schedule_dict.date}} {{wedding_schedule_dict.time}}',
-      imageUrl: 'http://wedding.ghmate.com{{image_list.main_img}}',
+      title: `${groom_dict.lastname}${groom_dict.firstname} ♥ ${bride_dict.lastname}${bride_dict.firstname} 결혼합니다`,
+      description: `${wedding_schedule_dict.hall_detail}  ${wedding_schedule_dict.date}  ${wedding_schedule_dict.time}`,
+      imageUrl: `http://wedding.ghmate.com${image_list.main_img}`,
       link: {
         mobileWebUrl: 'http://wedding.ghmate.com/invitation',
         webUrl: 'http://wedding.ghmate.com/invitation'
@@ -240,13 +246,13 @@ copyButton.addEventListener('click', function() {
 
 
 // 전화 걸기
-function makeCall(type, detail) {
+const makeCall = (type, detail) => {
   const phoneNumber = getNumber(type, detail)
   const phoneLink = 'tel:' + phoneNumber; // 전화번호를 URI Scheme으로 변환합니다.
   window.location.href = phoneLink; // 전화를 걸도록 URI Scheme을 사용하여 링크를 엽니다.
 }
 // 문자 전송
-function sendMessage(type, detail) {
+const sendMessage = (type, detail) => {
   const phoneNumber = getNumber(type, detail)
   var message = ''; // 보낼 문자메시지를 변수에 저장합니다.
   var smsLink = 'sms:' + phoneNumber + '?body=' + message; // 문자메시지를 URI Scheme으로 변환합니다.

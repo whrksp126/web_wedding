@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify, redirect, session
 import bcrypt
 # from flask_bcrypt import Bcrypt
@@ -225,6 +226,12 @@ def create_app():
     @app.route("/create", methods=['GET', 'POST'])
     def create():
         if request.method == 'GET':
+            if 'user' in session:
+                user_id = session['user']
+                print('user,',user_id)
+            else:
+                return render_template('/login.html') 
+            
             # from views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
             from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
             groom_dict = groom_dict
@@ -317,17 +324,47 @@ def create_app():
                     gallery_img_sm[idx] = v
 
             # 정렬
-            gallery_img = [v for k, v in sorted(gallery_img.items())]
-            gallery_img_sm = [v for k, v in sorted(gallery_img_sm.items())]
+            gallery_imgs = [v for k, v in sorted(gallery_img.items())]
+            gallery_img_sms = [v for k, v in sorted(gallery_img_sm.items())]
 
-            print('main_img_file,',main_img_file)
-            print('sub_img_file,',sub_img_file)
-            print('gallery_img,',gallery_img)
-            print('gallery_img_sm,',gallery_img_sm)
-            # if 'main_img' in request.files:
-            #   file = request.files['main_img']
-            # print(f'{file.filename} uploaded successfully')
+            # print('main_img_file,',main_img_file)
+            # print('sub_img_file,',sub_img_file)
+            # print('gallery_img,',gallery_img)
+            # print('gallery_img_sm,',gallery_img_sm)
+            
 
+            
+            # ============================================================================
+            # 서버에 이미지 저장 코드 완료 
+            # 클레어... 저는 대충 하드코딩했는데 이거 함수 만들어서 하면 코드 깔끔해질 듯 부탁드려요~
+            # 서버에 계속 파일 만들수 없으니 디비랑 연동 후 주석 제거해서 사용하기
+            # 이미지 파일명은 아마 프론트에서 처리했던거 같아요~ 그냥 디비에 그대로 넣기만 하면될듯
+            # user_id = session['user']
+            # UPLOAD_FOLDER = 'app/static/images/users/'
+            # upload_path = os.path.join(UPLOAD_FOLDER, user_id)
+            # if not os.path.exists(upload_path):
+            #     os.makedirs(upload_path) # app/static/images/users/user_id 가 없으면 폴더 생성        
+            # main_img_file.save(os.path.join(upload_path, main_img_file.filename))
+            # sub_img_file.save(os.path.join(upload_path, sub_img_file.filename))
+            # 
+            # upload_path = os.path.join(UPLOAD_FOLDER, user_id+'/gallery_img')
+            # if not os.path.exists(upload_path):
+            #     os.makedirs(upload_path)
+            # for gallery_img in gallery_imgs:
+            #     gallery_img.save(os.path.join(upload_path, gallery_img.filename))
+            #     
+            # upload_path = os.path.join(UPLOAD_FOLDER, user_id+'/gallery_img_sm')
+            # if not os.path.exists(upload_path):
+            #     os.makedirs(upload_path)
+            # for gallery_img_sm in gallery_img_sms:
+            #     gallery_img_sm.save(os.path.join(upload_path, gallery_img_sm.filename))
+            # ============================================================================
+            
+            # ===============================================================
+            # 클레어 브랜치 개발용으로 하나 더 만들었는데 develop 풀받아서 여기서 작업해주세요
+            # main 브랜치 데이터매니티처럼 실서버에서만 풀 받아서 작업하는 식으로 하는게 좋을 듯 합니다
+            # 결론 develop 풀 받고 작업하고 develop에 푸쉬 해주세여
+            # ===============================================================
             json_data = request.form.get('json')
             if json_data:
                 data = json.loads(json_data)
@@ -386,6 +423,12 @@ def create_app():
             response.status_code = 200
             return response
         
+    @app.route('/logout')
+    def logout():
+        session.pop('user', None)
+        return render_template('/login.html') 
+        
+        
         
     # @app.route("/create_account", methods=['GET', 'POST'])
     # def create_account():
@@ -402,6 +445,8 @@ def create_app():
 
     #     return render_template('/create.html')
     return app
+
+
 
 app = create_app()
 

@@ -115,7 +115,6 @@
   color: rgb(191,131,98);
 }
 #app-container .invitation_message > div > div:nth-child(2){
-  opacity: 1;
   transform: translate(0px, 0px);
   margin: 2rem 1rem 1.2rem;
   font-size: .9rem;
@@ -160,6 +159,7 @@
   vertical-align: middle;
   cursor: pointer;
   text-align: center;
+  line-height: 24px;
 }
 .phone-circle svg {
   width: 1.125rem;
@@ -562,20 +562,18 @@ input[id*=accordion]:checked + label .title > .arrow {
   line-height: 0;
   text-align: center;
   cursor: pointer;
+  color: #aaa;
+  font-size: 11px;
 }
 .c-guestbook .item .name {
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
 .c-guestbook .item .date {
-  color: #aaa;
   margin-right: 4px;
-  font-size: 11px;
 }
-.c-guestbook .item .close>.icon>svg {
-  width: 8px;
-  height: 8px;
-  fill: #aaa;
+.c-guestbook .item .close i{
+  line-height: 0;
 }
 .c-guestbook .item .text {
   line-height: 1.25rem;
@@ -831,4 +829,35 @@ input[id*=accordion]:checked + label .title > .arrow {
   font-weight: 600;
   cursor: pointer;
   text-align: center;
+}
+
+.c-map-navi{
+  text-align: left;
+    padding: 8px 10px;
+    display: flex;
+    background: #efe8e3;
+    color: #000;
+    font-size: .8rem;
+}
+.c-map-navi>button {
+  flex: 1.2;
+  margin: auto;
+  height: 1.1rem;
+  line-height: 1.1rem;
+  border-right: 1px solid rgba(97,80,67,.15);
+  text-align: center;
+  cursor: pointer;
+}
+.c-map-navi img{
+  position: relative;
+    top: -1px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+    border-radius: 16%;
+}
+.c-map-navi>button:last-child {
+  flex: 1;
+  border-right: 0;
 }
