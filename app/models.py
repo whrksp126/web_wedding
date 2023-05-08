@@ -71,6 +71,7 @@ class User(Base):
         self.user_pw = bcrypt.hashpw(user_pw.encode('utf-8'), bcrypt.gensalt())
         self.email = email
 
+
 class UserHasTemplate(Base):
     __tablename__ = 'user_has_template'
     user_id = Column(BigInteger, ForeignKey('user.id'), primary_key=True)
@@ -80,21 +81,6 @@ class UserHasTemplate(Base):
         self.user_id = user_id
         self.template_id = template_id
 
-class Account(Base):
-    __tablename__ = 'account'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    acc_bank = Column(String(50), nullable=False)
-    acc_number = Column(String(50), nullable=False)
-    acc_name = Column(String(50), nullable=False)
-    group_name = Column(String(50), nullable=False)
-    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
-
-    def __init__(self, acc_bank, acc_number, acc_name, group_name, user_id):
-        self.acc_bank = acc_bank
-        self.acc_number = acc_number
-        self.acc_name = acc_name
-        self.group_name = group_name
-        self.user_id = user_id
 
 class Relation(Base):
     __tablename__ = 'relation'
@@ -103,6 +89,24 @@ class Relation(Base):
 
     def __init__(self, relation):
         self.relation = relation
+
+
+class Account(Base):
+    __tablename__ = 'account'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    acc_bank = Column(String(50), nullable=False)
+    acc_number = Column(String(50), nullable=False)
+    acc_name = Column(String(50), nullable=False)
+    relation_id = Column(Integer, ForeignKey('relation.id'), nullable=False)
+    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+
+    def __init__(self, acc_bank, acc_number, acc_name, relation_id, user_id):
+        self.acc_bank = acc_bank
+        self.acc_number = acc_number
+        self.acc_name = acc_name
+        self.relation_id = relation_id
+        self.user_id = user_id
+
 
 class Guestbook(Base):
     __tablename__ = 'guest_book'
@@ -118,6 +122,7 @@ class Guestbook(Base):
         self.writer_pw = writer_pw
         self.contents = contents
         self.user_id = user_id
+
 
 class Information(Base):
     __tablename__ = 'information'
@@ -135,6 +140,7 @@ class Information(Base):
         self.user_id = user_id
         self.relation_id = relation_id
 
+
 class Picturetype(Base):
     __tablename__ = 'picture_type'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -142,6 +148,7 @@ class Picturetype(Base):
 
     def __init__(self, name):
         self.name = name
+
 
 class Picture(Base):
     __tablename__ = 'picture'
@@ -157,6 +164,7 @@ class Picture(Base):
         self.picture_type = picture_type
         self.priority = priority
 
+
 class Texttype(Base):
     __tablename__ = 'text_type'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -164,6 +172,7 @@ class Texttype(Base):
 
     def __init__(self, name):
         self.name = name
+
 
 class Textlist(Base):
     __tablename__ = 'text_list'
@@ -177,6 +186,7 @@ class Textlist(Base):
         self.user_id = user_id
         self.text_type = text_type
 
+
 class Transportationtype(Base):
     __tablename__ = 'transportation_type'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -184,6 +194,7 @@ class Transportationtype(Base):
 
     def __init__(self, name):
         self.name = name
+
 
 class Transportation(Base):
     __tablename__ = 'transportation'
@@ -196,6 +207,7 @@ class Transportation(Base):
         self.contents = contents
         self.user_id = user_id
         self.transportation_type = transportation_type
+
 
 class Weddinghall(Base):
     __tablename__ = 'wedding_hall'
@@ -218,5 +230,6 @@ class Weddinghall(Base):
         self.user_id = user_id
         self.lat = lat
         self.lng = lng
+
 
 Base.metadata.create_all(engine)
