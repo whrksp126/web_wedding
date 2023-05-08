@@ -3,8 +3,9 @@ from flask import Flask, render_template, request, jsonify, redirect, session
 import bcrypt
 # from flask_bcrypt import Bcrypt
 import json
+from datetime import datetime, timedelta
 
-from app.models import session_scope, User, Information, Weddinghall, Transportation, Account
+from app.models import session_scope, User, Information, Weddinghall, Transportation, Account, Guestbook
 from app.config import secret_key, bcrypt_level
 from app.views.index import geocoding
 
@@ -34,6 +35,7 @@ def create_app():
 
     @app.route("/")
     def index():
+        print("////comming???")
         if request.method == 'GET':
             return render_template('/index.html') 
         
@@ -42,6 +44,7 @@ def create_app():
         with session_scope() as db_session:
             test = db_session.query(User).filter(User.id == 1).first()
             # name = test.name
+            
             # 더미 존
             from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
             groom_dict = groom_dict # 신랑 데이터
@@ -50,6 +53,53 @@ def create_app():
             message_templates_dict = message_templates_dict # 글귀 데이터
             transport_list = transport_list # 교통 수단 데이터
             guestbook_list = guestbook_list # 방명록 데이터
+            # 더미 끝
+
+            temp_user_id = 5    # temp
+            
+            # groom
+            groom = db_session.query(Information)\
+                            .filter(Information.user_id == temp_user_id, Information.relation_id == 1).first()
+            groom_father = db_session.query(Information)\
+                                   .filter(Information.user_id == temp_user_id, Information.relation_id == 3).first()
+            groom_mother = db_session.query(Information)\
+                                    .filter(Information.user_id == temp_user_id, Information.relation_id == 5).first()
+            groom_dict = {
+                "firstname" : groom.first_name,
+                "lastname" : groom.last_name,
+                "phoneNum" : groom.tel,
+                "father": groom_father.last_name + groom_father.first_name,
+                "fatherFirstName" : groom_father.first_name,
+                "fatherLastName" : groom_father.last_name,
+                "fatherPhoneNum" : groom_father.tel,
+                "mother" : groom_mother.last_name + groom_mother.first_name,
+                "motherFirstName" : groom_mother.first_name,
+                "motherLastName" : groom_mother.last_name,
+                "motherPhoneNum" : groom_mother.tel,
+                "relation" : "아들",
+            }
+            
+            # bride
+            bride = db_session.query(Information)\
+                            .filter(Information.user_id == temp_user_id, Information.relation_id == 1).first()
+            bride_father = db_session.query(Information)\
+                                   .filter(Information.user_id == temp_user_id, Information.relation_id == 3).first()
+            bride_mother = db_session.query(Information)\
+                                    .filter(Information.user_id == temp_user_id, Information.relation_id == 5).first()
+            bride_dict = {
+                "firstname" : bride.first_name,
+                "lastname" : bride.last_name,
+                "phoneNum" : bride.tel,
+                "father": bride_father.last_name + bride_father.first_name,
+                "fatherFirstName" : bride_father.first_name,
+                "fatherLastName" : bride_father.last_nme,
+                "fatherPhoneNum" : bride_father.tel,
+                "mother" : bride_mother.last_name + bride_mother.first_name,
+                "motherFirstName" : bride_mother.first_name,
+                "motherLastName" : bride_mother.last_name,
+                "motherPhoneNum" : bride_mother.tel,
+                "relation" : "딸딸",
+            }
             
             image_list = image_list # 이미지 데이터   
         return render_template('invitation.html',  
@@ -67,6 +117,7 @@ def create_app():
     @app.route("/login", methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
+            print("getcomming???")
             return render_template('/login.html')
         
         if request.method == 'POST':
@@ -381,7 +432,7 @@ def create_app():
         if request.method == 'POST':
             data = request.get_json()
             address = data['address']
-            lat_lng = geocoding(address);
+            lat_lng = geocoding(address)
             print(address, lat_lng)
             response = jsonify({
                 'data' : {
@@ -400,7 +451,12 @@ def create_app():
             name = data['name']
             password = data['password']
             content = data['content']
-            # 클레어 방명록 추가 ("created_at":"2021.08.08" 이것도 같이요!!)
+            with session_scope() as db_session:
+                guesstbook_item = Guestbook(name, password, datetime.utcnow + timedelta(hours=9), content, 5) # temp
+                db_session.add(guesstbook_item)
+                db_session.commit()
+                db_session.refresh(guesstbook_item)
+
             print(name, password, content)
             response = jsonify({
                 'message': 'Success'
@@ -416,7 +472,11 @@ def create_app():
             id = data['id']
             print('password,',password)
             print('id,',id)
+            
             # 클레어 방명록 삭제 쿼리 부탁드립니다~
+            with session_scope() as db_session:
+                db_session.query(Guestbook).filter(Guestbook.id == id).delete()
+            
             response = jsonify({
                 'message': 'Success'
             })
