@@ -37,6 +37,7 @@ def create_app():
     def index():
         print("////comming???")
         if request.method == 'GET':
+            print('index들어옴')
             return render_template('/index.html') 
         
     @app.route("/invitation")
