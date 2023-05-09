@@ -92,14 +92,31 @@ def create_app():
                 "phoneNum" : bride.tel,
                 "father": bride_father.last_name + bride_father.first_name,
                 "fatherFirstName" : bride_father.first_name,
-                "fatherLastName" : bride_father.last_nme,
+                "fatherLastName" : bride_father.last_name,
                 "fatherPhoneNum" : bride_father.tel,
                 "mother" : bride_mother.last_name + bride_mother.first_name,
                 "motherFirstName" : bride_mother.first_name,
                 "motherLastName" : bride_mother.last_name,
                 "motherPhoneNum" : bride_mother.tel,
-                "relation" : "딸딸",
+                "relation" : "딸",
             }
+
+            # wedding
+            wedding = db_session.query(Weddinghall)\
+                                .filter(Weddinghall.user_id ==temp_user_id).first()
+            # wedding_schedule_dict = {
+            #     'date' : ,
+            #     'date_format' : ,
+            #     'time' : ,
+            #     'time_hour' : ,
+            #     'time_minute' : ,
+            #     'hall_detail' :  ,
+            #     'hall_name' : ,
+            #     'hall_floor' : ,
+            #     'hall_addr' : ,
+            #     'lat' : ,
+            #     'lng' : 
+            # }
             
             image_list = image_list # 이미지 데이터   
         return render_template('invitation.html',  
@@ -121,7 +138,30 @@ def create_app():
             return render_template('/login.html')
         
         if request.method == 'POST':
-            print("comming?")
+            data = request.get_json()
+            
+            id = data['id']
+            pw = data['password']
+
+            with session_scope() as db_session:
+                user_item = db_session.query(User).filter(User.user_id == id).first()
+
+                print("user",user_item)
+                if user_item and bcrypt.checkpw(pw.encode('utf-8'), user_item.user_pw.encode('utf-8')):   # 로그인 성공
+                    print("로그인성공")
+                    session['user']=user_item.user_id
+                    response = jsonify({'message': 'Success'})
+                    response.status_code = 200
+                else:           # 로그인 실패
+                    print("로그인실패")
+                    response = jsonify({'message': 'Success'})
+                    response.status_code = 401
+                    
+            return response
+
+            '''
+            ### 이거뭐야 ###
+            print("comming?", len(request.form.get('json')))
             # data = request.get_json()
             json_data = json.loads(request.form.get('json'))
             print("@#$",type(json_data))
@@ -218,12 +258,6 @@ def create_app():
             if not os.path.exists(folder_path):
                 os.makedirs(folder_path)
 
-            if main_img_file:
-                # filename = file.filename
-                main_img_file.save(folder_path+"/"+'main_img.jpg')
-
-
-
             json_data = request.form.get('json')
             if json_data:
                 data = json.loads(json_data)
@@ -249,6 +283,12 @@ def create_app():
                         response.status_code = 401
                     
                     return response
+            if main_img_file:
+                # filename = file.filename
+                main_img_file.save(folder_path+"/"+'main_img.jpg')
+            '''
+
+
         
     @app.route("/register", methods=['GET', 'POST'])
     def register():
@@ -263,12 +303,13 @@ def create_app():
             id = data['id']
             pwd = data['password']
             email = data['email']
-
+            print("333register_comming:???",name,id,pwd,email)
             with session_scope() as db_session:
-                user_item = User(name, id, pwd, email)
+                user_item = User(name, id, pwd, email, '0000')
                 db_session.add(user_item)
                 db_session.commit()
                 db_session.refresh(user_item)
+                print("회원가입 성공")
             response = jsonify({'message': 'Success'})
             response.status_code = 200
             return response
@@ -276,6 +317,7 @@ def create_app():
 
     @app.route("/create", methods=['GET', 'POST'])
     def create():
+        print("comming///create")
         if request.method == 'GET':
             if 'user' in session:
                 user_id = session['user']
