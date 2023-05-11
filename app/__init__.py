@@ -56,7 +56,7 @@ def create_app():
             guestbook_list = guestbook_list # 방명록 데이터
             # 더미 끝
 
-            temp_user_id = 5    # temp
+            temp_user_id = 7    # temp
             
             # groom
             groom = db_session.query(Information)\
@@ -82,11 +82,11 @@ def create_app():
             
             # bride
             bride = db_session.query(Information)\
-                            .filter(Information.user_id == temp_user_id, Information.relation_id == 1).first()
+                            .filter(Information.user_id == temp_user_id, Information.relation_id == 2).first()
             bride_father = db_session.query(Information)\
-                                   .filter(Information.user_id == temp_user_id, Information.relation_id == 3).first()
+                                   .filter(Information.user_id == temp_user_id, Information.relation_id == 4).first()
             bride_mother = db_session.query(Information)\
-                                    .filter(Information.user_id == temp_user_id, Information.relation_id == 5).first()
+                                    .filter(Information.user_id == temp_user_id, Information.relation_id == 6).first()
             bride_dict = {
                 "firstname" : bride.first_name,
                 "lastname" : bride.last_name,
@@ -306,7 +306,7 @@ def create_app():
             email = data['email']
             print("333register_comming:???",name,id,pwd,email)
             with session_scope() as db_session:
-                user_item = User(name, id, pwd, email, '0000')
+                user_item = User(name, id, pwd, email)
                 db_session.add(user_item)
                 db_session.commit()
                 db_session.refresh(user_item)
@@ -326,8 +326,8 @@ def create_app():
             else:
                 return render_template('/login.html') 
             
-            # from views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
-            from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
+            from app.views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
+            # from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
             groom_dict = groom_dict
             bride_dict = bride_dict
             bank_acc = bank_acc
@@ -365,18 +365,20 @@ def create_app():
             print("@@bank_acc",bank_acc)
             print("@@transport_list",transport_list)
 
+            temp_user_id = 7    # temp
+
             with session_scope() as db_session:
                 # 신랑 / 신부 가족 정보
                 key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherFirstName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
                 for i, d in enumerate([groom_dict, bride_dict]):
                     for check in range(0, 8, 3):
-                        info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], 5, 1+i if check == 0 else 3+i if check == 3 else 5+i)
+                        info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], temp_user_id, 1+i if check == 0 else 3+i if check == 3 else 5+i)
                         db_session.add(info_item)
                         db_session.commit()
                         db_session.refresh(info_item)
 
                 # 웨딩홀 정보
-                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], 5, 0, 0)
+                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], temp_user_id, 0, 0)
                 db_session.add(wedding_hall_item)
                 db_session.commit()
                 db_session.refresh(wedding_hall_item)
@@ -385,7 +387,7 @@ def create_app():
                 # message_dict 위에 시는 안보내는지?
 
                 # 방명록 비밀번호 업데이트 -> 디폴트값 0000
-                user_item = db_session.query(User).filter(User.id == 5).first()
+                user_item = db_session.query(User).filter(User.id == temp_user_id).first()
                 user_item.guestbook_pw = guestbook_password
                 db_session.commit()
 
@@ -394,7 +396,7 @@ def create_app():
 
                 # 대중교통
                 for i, t in enumerate(transport_list):
-                    transport_item = Transportation(t['contents_transport'], 5, i+1)
+                    transport_item = Transportation(t['contents_transport'], temp_user_id, i+1)
                     db_session.add(transport_item)
                     db_session.commit()
                     db_session.refresh(transport_item)
