@@ -5,7 +5,7 @@ import bcrypt
 import json
 from datetime import datetime, timedelta
 
-from app.models import session_scope, User, Information, Weddinghall, Transportation, Account, Guestbook
+from app.models import session_scope, User, Information, Weddinghall, Transportation, Account, Guestbook, Transportationtype
 from app.config import secret_key, bcrypt_level
 from app.views.index import geocoding
 
@@ -35,7 +35,6 @@ def create_app():
 
     @app.route("/")
     def index():
-        print("////comming???")
         if request.method == 'GET':
             print('index들어옴')
             return render_template('/index.html') 
@@ -103,21 +102,93 @@ def create_app():
             }
 
             # wedding
-            wedding = db_session.query(Weddinghall)\
+            wedding_item = db_session.query(Weddinghall)\
                                 .filter(Weddinghall.user_id ==temp_user_id).first()
-            # wedding_schedule_dict = {
-            #     'date' : ,
-            #     'date_format' : ,
-            #     'time' : ,
-            #     'time_hour' : ,
-            #     'time_minute' : ,
-            #     'hall_detail' :  ,
-            #     'hall_name' : ,
-            #     'hall_floor' : ,
-            #     'hall_addr' : ,
-            #     'lat' : ,
-            #     'lng' : 
-            # }
+            
+            weekdays = ['월', '화', '수', '목', '금', '토', '일']
+            date = wedding_item.time.weekday()
+
+            wedding_schedule_dict = {
+                'date' : (wedding_item.date).strftime('%Y년 %m월 %d일'),
+                'date_format' : wedding_item.date,
+                'time' : '{}요일 {}'.format(weekdays[date], wedding_item.time),
+                'time_hour' : (wedding_item.time).split('시')[0]+'시',
+                'time_minute' : (wedding_item.time).split('시')[1],
+                'hall_detail' : wedding_item.name + wedding_item.address_detail ,
+                'hall_name' : wedding_item.name,
+                'hall_floor' : wedding_item.address_detail,
+                'hall_addr' : wedding_item.address,
+                'lat' : wedding_item.lat,
+                'lng' : wedding_item.lng
+            }
+
+
+            # message
+            message_template = {}
+
+
+            # tramsport
+            transportation_type = db_session.query(Transportationtype).all()
+            transporation_query = db_session.query(Transportation)\
+                                    .filter(Transportation.user_id == temp_user_id)
+            
+            transport_list = []
+            for i ,t in enumerate(transportation_type):
+                transport_list.append({
+                    "title_transport":t.name,
+                    "contents_transport":(transporation_query.filter(Transportation.transportation_type == i+1).first()).contents
+                })
+
+
+            # guestbook
+            guestbook_items = db_session.query(Guestbook)\
+                                    .filter(Guestbook.user_id == temp_user_id).all()
+
+            guestbook_list = []
+            for g in guestbook_items:
+                guestbook_list.append({
+                    "id" : g.id,
+                    "name" : g.writer,
+                    "content_guestbook" : g.contents,
+                    "password" : g.writer_pw,
+                    "created_at" : g.created_at
+                })
+
+            
+            # image
+            image_list = {}
+
+
+            # account
+            account_items = db_session.query(Account)\
+                                    .filter(Account.user_id == temp_user_id).all()
+            
+            groom_acc_list = []
+            bride_acc_list = []
+            for a in account_items:
+                if a.relation_id//2 == 1:
+                    groom_acc_list.append({
+                        "bank":a.acc_bank,
+                        "name":a.acc_name,
+                        "number":a.acc_number
+                    })
+                else:
+                    bride_acc_list.append({
+                        "bank":a.acc_bank,
+                        "name":a.acc_name,
+                        "number":a.acc_number
+                    })
+
+            bank_acc = [
+                {
+                    "group_name" : "신랑측",
+                    "list" : groom_acc_list
+                },
+                {
+                    "group_name" : "신부측",
+                    "list" : bride_acc_list
+                }
+            ]
             
             image_list = image_list # 이미지 데이터   
         return render_template('invitation.html',  
