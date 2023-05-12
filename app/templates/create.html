@@ -53,22 +53,22 @@
                 <form name="groom-info" action="">
                     <div>
                         <h4>신랑님</h4>
-                        <input type="text" name="groom lastName" placeholder="성" data-type="groom_dict" data-name="lastname" value="{{groom_dict.lastname}}">
-                        <input type="text" name="groom firstName" placeholder="이름" data-type="groom_dict" data-name="firstname" value="{{groom_dict.firstname}}">
+                        <input type="text" data-required="true" data-message="신랑 성" name="groom lastName" placeholder="성" data-type="groom_dict" data-name="lastname" value="{{groom_dict.lastname}}">
+                        <input type="text" data-required="true" data-message="신랑 이름" name="groom firstName" placeholder="이름" data-type="groom_dict" data-name="firstname" value="{{groom_dict.firstname}}">
                     </div>
                     <div>
                         <h4>아버님</h4>
-                        <input type="text" name="groom father lastName" placeholder="성" data-type="groom_dict"  data-name="fatherLastName" value="{{groom_dict.fatherLastName}}">
-                        <input type="text" name="groom father firstName" placeholder="이름" data-type="groom_dict"  data-name="fatherFirstName"  value="{{groom_dict.fatherFirstName}}">
+                        <input type="text" data-required="true" data-message="신랑 아버님 성" name="groom father lastName" placeholder="성" data-type="groom_dict"  data-name="fatherLastName" value="{{groom_dict.fatherLastName}}">
+                        <input type="text" data-required="true" data-message="신랑 아버님 이름" name="groom father firstName" placeholder="이름" data-type="groom_dict"  data-name="fatherFirstName"  value="{{groom_dict.fatherFirstName}}">
                     </div>
                     <div>
                         <h4>어머님</h4>
-                        <input type="text" name="groom mother lastName" placeholder="성"  data-type="groom_dict"  data-name="motherLastName" value="{{groom_dict.motherLastName}}">
-                        <input type="text" name="groom mother firstName" placeholder="이름"  data-type="groom_dict"  data-name="motherFirstName" value="{{groom_dict.motherFirstName}}">
+                        <input type="text" data-required="true" data-message="신랑 어머님 성" name="groom mother lastName" placeholder="성"  data-type="groom_dict"  data-name="motherLastName" value="{{groom_dict.motherLastName}}">
+                        <input type="text" data-required="true" data-message="신랑 어머님 이름" name="groom mother firstName" placeholder="이름"  data-type="groom_dict"  data-name="motherFirstName" value="{{groom_dict.motherFirstName}}">
                     </div>
                     <div>
                         <h4>관계</h4>
-                        <select name="relation" id=""  data-type="groom_dict"  data-name="relation" >
+                        <select name="relation" data-required="true" data-message="신랑 관계" id=""  data-type="groom_dict"  data-name="relation" >
                             <option value="" {{ 'selected' if groom_dict.relation == "" else "" }}></option>
                             <option value="아들" {{ 'selected' if groom_dict.relation == "아들" else "" }}>아들</option>
                             <option value="장남" {{ 'selected' if groom_dict.relation == "장남" else "" }}>장남</option>
@@ -97,22 +97,22 @@
                 <form name="bride-info" action="">
                     <div>
                         <h4>신부님</h4>
-                        <input type="text" name="bride lastName" placeholder="성" data-type="bride_dict"  data-name="lastname"  value="{{bride_dict.lastname}}">
-                        <input type="text" name="bride firstName" placeholder="이름" data-type="bride_dict"  data-name="firstname" value="{{bride_dict.firstname}}">
+                        <input type="text" data-required="true" data-message="신부 성" name="bride lastName" placeholder="성" data-type="bride_dict"  data-name="lastname"  value="{{bride_dict.lastname}}">
+                        <input type="text" data-required="true" data-message="신부 이름" name="bride firstName" placeholder="이름" data-type="bride_dict"  data-name="firstname" value="{{bride_dict.firstname}}">
                     </div>
                     <div>
                         <h4>아버님</h4>
-                        <input type="text" name="bride father lastName" placeholder="성" data-type="bride_dict"  data-name="fatherLastName" value="{{bride_dict.fatherLastName}}">
-                        <input type="text" name="bride father firstName" placeholder="이름" data-type="bride_dict"  data-name="fatherFirstName" value="{{bride_dict.fatherFirstName}}">
+                        <input type="text" data-required="true" data-message="신부 아버님 성" name="bride father lastName" placeholder="성" data-type="bride_dict"  data-name="fatherLastName" value="{{bride_dict.fatherLastName}}">
+                        <input type="text" data-required="true" data-message="신부 아버님 이름" name="bride father firstName" placeholder="이름" data-type="bride_dict"  data-name="fatherFirstName" value="{{bride_dict.fatherFirstName}}">
                     </div>
                     <div>
                         <h4>어머님</h4>
-                        <input type="text" name="bride mother lastName" placeholder="성" data-type="bride_dict"  data-name="motherLastName" value="{{bride_dict.motherLastName}}">
-                        <input type="text" name="bride mother firstName" placeholder="이름" data-type="bride_dict"  data-name="motherFirstName" value="{{bride_dict.motherFirstName}}">
+                        <input type="text" data-required="true" data-message="신부 어머님 성" name="bride mother lastName" placeholder="성" data-type="bride_dict"  data-name="motherLastName" value="{{bride_dict.motherLastName}}">
+                        <input type="text" data-required="true" data-message="신부 어머님 이름" name="bride mother firstName" placeholder="이름" data-type="bride_dict"  data-name="motherFirstName" value="{{bride_dict.motherFirstName}}">
                     </div>
                     <div>
                         <h4>관계</h4>
-                        <select name="relation" id="" data-type="bride_dict"  data-name="relation">
+                        <select name="relation" data-required="true" data-message="신부 관계" id="" data-type="bride_dict"  data-name="relation">
                             <option value="" {{ 'selected' if bride_dict.relation == "" else "" }}></option>
                             <option value="딸" {{ 'selected' if bride_dict.relation == "딸" else "" }}>딸</option>
                             <option value="장녀" {{ 'selected' if bride_dict.relation == "장녀" else "" }}>장녀</option>
@@ -141,7 +141,7 @@
                 <form name="phrase-info" action="" class="image-info">
                     <div>
                         <h4>제목</h4>
-                        <input type="text" size="10" name="phrase-title" placeholder="초대합니다" data-type="message_templates_dict"  data-name="sub_title" value="{{message_templates_dict.sub_title}}">
+                        <input type="text" data-required="true" data-message="모시는 글 제목" size="10" name="phrase-title" placeholder="초대합니다" data-type="message_templates_dict"  data-name="sub_title" value="{{message_templates_dict.sub_title}}">
                     </div>
                     <div>
                         <h4>내용</h4>
@@ -153,7 +153,7 @@
                     <div>
                         <h4>사진</h4>
                         <div class="main-image img-container" onclick="clickAddImg(this);">
-                            <input type="file" accept="image/*" data-type="image_list"  data-name="sub_img" hidden="hidden" onchange="changeInputImg(this)">
+                            <input type="file" data-required="true" data-message="모시는 글 사진" accept="image/*" data-type="image_list"  data-name="sub_img" hidden="hidden" onchange="changeInputImg(this)">
                             <p>클릭 후 업로드</p>
                             <canvas width="300" height="300"></canvas>
                             <img class="origin-img" src="" alt="">
@@ -172,13 +172,13 @@
                 <form name="reservation-info" action="">
                     <div>
                         <h4>예약일</h4>
-                        <input type="date" name="reservation date" data-type="wedding_schedule_dict"  data-name="date" value="{{ wedding_schedule_dict.date_format }}">
+                        <input type="date" data-required="true" data-message="예식 예약일" name="reservation date" data-type="wedding_schedule_dict"  data-name="date" value="{{ wedding_schedule_dict.date_format }}">
                     </div>
                     <div >
                         <h4>예약시간</h4>
                         <div class="reservation-time">
 
-                            <select name="reservation time hour" id="" data-type="wedding_schedule_dict"  data-name="time_hour">
+                            <select name="reservation time hour" data-required="true" data-message="예식 예약시간" id="" data-type="wedding_schedule_dict"  data-name="time_hour">
                                 <option value="없음" {{ "selected" if wedding_schedule_dict.time_hour == "" else ""}}>없음</option>
                                 <option value="오전 7시" {{ "selected" if wedding_schedule_dict.time_hour == "오전 7시" else ""}}>오전 7시</option>
                                 <option value="오전 8시" {{ "selected" if wedding_schedule_dict.time_hour == "오전 8시" else ""}}>오전 8시</option>
@@ -197,7 +197,7 @@
                                 <option value="오후 9시" {{ "selected" if wedding_schedule_dict.time_hour == "오후 9시" else ""}}>오후 9시</option>
                                 <option value="오후 10시" {{ "selected" if wedding_schedule_dict.time_hour == "오후 10시" else ""}}>오후 10시</option>
                             </select>
-                            <select name="reservation time minute" id="" data-type="wedding_schedule_dict"  data-name="time_minute">
+                            <select name="reservation time minute" data-required="true" data-message="예식 예약시간" id="" data-type="wedding_schedule_dict"  data-name="time_minute">
                                 <option value="정각" {{ "selected" if wedding_schedule_dict.time_minute == "정각" else ""}}>정각</option>
                                 <option value="5분" {{ "selected" if wedding_schedule_dict.time_minute == "5분" else ""}}>5분</option>
                                 <option value="10분" {{ "selected" if wedding_schedule_dict.time_minute == "10분" else ""}}>10분</option>
@@ -225,15 +225,15 @@
                 <form name="place-info" action="">
                     <div>
                         <h4>예식장명</h4>
-                        <input type="text" size="10" name="wedding-place name" data-type="wedding_schedule_dict"  data-name="hall_name" value="{{wedding_schedule_dict.hall_name}}">
+                        <input type="text" data-required="true" data-message="예식장소 예식장명" size="10" name="wedding-place name" data-type="wedding_schedule_dict"  data-name="hall_name" value="{{wedding_schedule_dict.hall_name}}">
                     </div>
                     <div>
                         <h4>층과 홀</h4>
-                        <input type="text" size="10" name="wedding-place detail" data-type="wedding_schedule_dict"  data-name="hall_floor" value="{{wedding_schedule_dict.hall_floor}}">
+                        <input type="text" data-required="true" data-message="예식장소 층과 홀" size="10" name="wedding-place detail" data-type="wedding_schedule_dict"  data-name="hall_floor" value="{{wedding_schedule_dict.hall_floor}}">
                     </div>
                     <div>
                         <h4>주소</h4>
-                        <input type="text" size="1" name="wedding-place addr" data-type="wedding_schedule_dict"  data-name="hall_addr" value="{{wedding_schedule_dict.hall_addr}}">
+                        <input type="text" data-required="true" data-message="주소" size="1" name="wedding-place addr" data-type="wedding_schedule_dict"  data-name="hall_addr" value="{{wedding_schedule_dict.hall_addr}}">
                         <div onclick="openPostCode()" class="map-search-btn">검색</div>
                         <input type="text" hidden name="wedding-place lat_lng" data-type="wedding_schedule_dict"  data-name="lat" value="{{wedding_schedule_dict.lat}}">
                         <input type="text" hidden name="wedding-place lat_lng" data-type="wedding_schedule_dict"  data-name="lng" value="{{wedding_schedule_dict.lng}}">
@@ -271,7 +271,7 @@
                     <div>
                         <h4>사진</h4>
                         <div class="main-image img-container" onclick="clickAddImg(this);">
-                            <input type="file" accept="image/*" data-type="image_list"  data-name="main_img"  hidden="hidden" onchange="changeInputImg(this)">
+                            <input type="file" data-required="true" data-message="메인 이미지" accept="image/*" data-type="image_list"  data-name="main_img"  hidden="hidden" onchange="changeInputImg(this)">
                             <p>클릭 후 업로드</p>
                             <canvas width="300" height="300"></canvas>
                             <img class="origin-img" src="" alt="">
@@ -294,7 +294,7 @@
                     <div>
                         <!-- <h4>갤러리</h4> -->
                         <div class="gallery-image img-container" onclick="clickAddImg(this);">
-                            <input type="file" accept="image/*" hidden="hidden" onchange="changeInputImg(this);">
+                            <input type="file" data-required="true" data-message="갤러리 이미지" accept="image/*" hidden="hidden" onchange="changeInputImg(this);">
                             <p>클릭 후 업로드</p>
                             <canvas width="300" height="300"></canvas>
                             <img class="origin-img" src="" alt="">
@@ -314,11 +314,11 @@
                 <form name="couple-call-info" action="">
                     <div>
                         <h4>신랑님</h4>
-                        <input type="text" size="10" placeholder="'-'없이 입력해주세요" data-type="groom_dict" data-name="phoneNum" value="{{groom_dict.phoneNum}}">
+                        <input type="text" data-required="true" data-message="신랑 전화번호" size="10" placeholder="'-'없이 입력해주세요" data-type="groom_dict" data-name="phoneNum" value="{{groom_dict.phoneNum}}">
                     </div>
                     <div>
                         <h4>신부님</h4>
-                        <input type="text" size="10" placeholder="'-'없이 입력해주세요" data-type="bride_dict" data-name="phoneNum" value="{{bride_dict.phoneNum}}">
+                        <input type="text" data-required="true" data-message="신부 전화번호" size="10" placeholder="'-'없이 입력해주세요" data-type="bride_dict" data-name="phoneNum" value="{{bride_dict.phoneNum}}">
                     </div>
                 </form>
             </div>
@@ -333,19 +333,19 @@
                 <form name="couple-parents-call-info" action="">
                     <div>
                         <h4>신랑 아버님</h4>
-                        <input type="text" size="10" placeholder="'-'없이 입력해주세요" data-type="groom_dict" data-name="fatherPhoneNum" value="{{groom_dict.fatherPhoneNum}}">
+                        <input type="text" data-required="true" data-message="신랑 아버님 전화번호" size="10" placeholder="'-'없이 입력해주세요" data-type="groom_dict" data-name="fatherPhoneNum" value="{{groom_dict.fatherPhoneNum}}">
                     </div>
                     <div>
                         <h4>신랑 어머님</h4>
-                        <input type="text" size="10" placeholder="'-'없이 입력해주세요" data-type="groom_dict" data-name="motherPhoneNum" value="{{groom_dict.motherPhoneNum}}">
+                        <input type="text" data-required="true" data-message="신랑 어머님 전화번호" size="10" placeholder="'-'없이 입력해주세요" data-type="groom_dict" data-name="motherPhoneNum" value="{{groom_dict.motherPhoneNum}}">
                     </div>
                     <div>
                         <h4>신부 아버님</h4>
-                        <input type="text" size="10" placeholder="'-'없이 입력해주세요" data-type="bride_dict" data-name="fatherPhoneNum" value="{{bride_dict.fatherPhoneNum}}">
+                        <input type="text" data-required="true" data-message="신부 아버님 전화번호" size="10" placeholder="'-'없이 입력해주세요" data-type="bride_dict" data-name="fatherPhoneNum" value="{{bride_dict.fatherPhoneNum}}">
                     </div>
                     <div>
                         <h4>신부 어머님</h4>
-                        <input type="text" size="10" placeholder="'-'없이 입력해주세요" data-type="bride_dict" data-name="motherPhoneNum" value="{{bride_dict.motherPhoneNum}}">
+                        <input type="text" data-required="true" data-message="신부 어머님 전화번호" size="10" placeholder="'-'없이 입력해주세요" data-type="bride_dict" data-name="motherPhoneNum" value="{{bride_dict.motherPhoneNum}}">
                     </div>
                 </form>
             </div>
@@ -370,13 +370,13 @@
                         <div class="{{ 'first' if loop.index0 == 0 else 'other'}} bank-number-{{group_index}}">
                             <h4>계좌번호</h4>
                             <div class="account-data">
-                                <input type="text" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="{{bank_data.bank}}">
-                                <input type="text" placeholder="계좌번호" data-type="bank_acc" data-name="list" list-type="number" value="{{bank_data.number}}">
+                                <input type="text" data-required="true" data-message="은행" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="{{bank_data.bank}}">
+                                <input type="text" data-required="true" data-message="계좌번호" placeholder="계좌번호" data-type="bank_acc" data-name="list" list-type="number" value="{{bank_data.number}}">
                             </div>
                         </div>
                         <div class="{{ 'first' if loop.index0 == 0 else 'other'}} bank-name-{{group_index}}" >
                             <h4>예금주</h4>
-                            <input type="text"  data-type="bank_acc" data-name="list" list-type="name" value="{{bank_data.name}}">
+                            <input type="text" data-required="true" data-message="예금주" data-type="bank_acc" data-name="list" list-type="name" value="{{bank_data.name}}">
                         </div>
                         <br class="{{ 'first' if loop.index0 == 0 else 'other'}} bank-br-tag-{{group_index}}">
                     {% endfor %}
@@ -400,7 +400,7 @@
                 <form name="guest-book-info">
                     <div>
                         <h4>비밀번호</h4>
-                        <input type="password"  data-type="guestbook_password" data-name="password" >
+                        <input type="password" data-required="true" data-message="방명록 비밀번호" data-type="guestbook_password" data-name="password" >
                     </div>
                 </form>
             </div>
