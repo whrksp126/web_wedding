@@ -146,6 +146,10 @@ input[name="wedding-place addr"] {
 /* 끝 예식 장소 */
 
 /* 시작 예식 일시 */
+[name="reservation-info"] input[type="date"] {
+  text-align: center;
+  line-height: 30px;
+}
 [name="reservation-info"] .reservation-time{
   display: flex;
   flex-wrap: wrap;

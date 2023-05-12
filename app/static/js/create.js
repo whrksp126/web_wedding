@@ -660,6 +660,21 @@ const getTextHtml = (id) => {
 
 // submit 데이터 쌓기
 const getInputData = () => {
+    const __required = document.querySelectorAll('[data-required="true"]');
+    let requiredPass = true;
+    __required.forEach((_required)=>{
+        if(!requiredPass) return;
+        if(_required.value == '') {
+            requiredPass = false;
+            const message = _required.getAttribute('data-message');
+            alert(`${message} 을(를) 입력해주세요`)
+            const offset = -100;
+            _required.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest', offset: offset });
+
+
+        }
+    });
+    if(!requiredPass) return;
     const typeList = [
         'groom_dict', 
         'bride_dict', 
