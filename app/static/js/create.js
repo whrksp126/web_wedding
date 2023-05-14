@@ -276,7 +276,8 @@ const clickSaveCropImage = () => {
 // 샘플 문구 모달 생성
 const openSamplePhrasesModal = (e) => {
     e.preventDefault();
-
+    const textarea = e.target.nextSibling.nextSibling;
+    const textareaId = textarea.id;
     const samplePhrase = [
         `새로운 마음과 새 의미를 간직하며
         저희 두 사람이 새 출발의 첫 걸음을 내딛습니다.
@@ -361,7 +362,7 @@ const openSamplePhrasesModal = (e) => {
                 <div>`
                 
     samplePhrase.forEach((phrase)=>{
-        modalHtml += `<div class="phrase-container" onclick="addSampleRhrase(this)">${phrase.replace(/\n/g, '<br/>')}</div>`            
+        modalHtml += `<div class="phrase-container" onclick="addSampleRhrase(this, ${textareaId})">${phrase.replace(/\n/g, '<br/>')}</div>`            
     })
     
     modalHtml += `</div>
@@ -385,14 +386,17 @@ const clickDeleteSamplePhraseModal = (e) => {
 }
 
 // 샘플 문구를 클릭했을 때 textarea에 해당 문구를 추가한다.
-const addSampleRhrase = (target) => {
-    const newText = target.innerHTML
-    var editor = tinymce.get('phrase_textarea');
+const addSampleRhrase = (textTarget, textareaId) => {
+    const newText = textTarget.innerHTML;
+    let editor = tinymce.get(textareaId.id);
     editor.setContent(newText);
     document.querySelector('.sample-phrase-modal').remove();
 }
 
-document.querySelector('.btn-show-sample-phrase').addEventListener('click',(e)=>{openSamplePhrasesModal(e)})
+// document.querySelector('.btn-show-sample-phrase').addEventListener('click',(e)=>{openSamplePhrasesModal(e)})
+document.querySelectorAll('.btn-show-sample-phrase').forEach((button)=>{
+    button.addEventListener('click',(e)=>{openSamplePhrasesModal(e)})
+})
 
 // 예약일 기본 값 오늘로 지정
 if(document.querySelector('[name="reservation-info"] [type="date"]').value == ''){
@@ -620,6 +624,7 @@ const getUriToBlob = (dataURI, fileName) => {
 // 텍스트 에디터 세팅
 const tinymceList = [
     { 'id':'phrase_textarea', 'content' : message_templates_dict['sub_message'].trim(),}, 
+    { 'id':'main_phrase_textarea', 'content' : message_templates_dict['main_message'].trim(),}, 
     { 'id': 'transport_textarea_0', 'content' : transport_list[0]['contents_transport'].trim(),}, 
     { 'id' : 'transport_textarea_1','content' : transport_list[1]['contents_transport'].trim(),}, 
     { 'id' : 'transport_textarea_2','content' : transport_list[2]['contents_transport'].trim()}
@@ -660,6 +665,8 @@ const getTextHtml = (id) => {
 
 // submit 데이터 쌓기
 const getInputData = () => {
+
+    // 시작 유효성 검사 코드
     const __required = document.querySelectorAll('[data-required="true"]');
     let requiredPass = true;
     __required.forEach((_required)=>{
@@ -670,11 +677,10 @@ const getInputData = () => {
             alert(`${message} 을(를) 입력해주세요`)
             const offset = -100;
             _required.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest', offset: offset });
-
-
         }
     });
     if(!requiredPass) return;
+    // 끝 유효성 검사 코드
     const typeList = [
         'groom_dict', 
         'bride_dict', 
@@ -695,6 +701,7 @@ const getInputData = () => {
         submitObj[type] = keyObj
     })
     submitObj['bank_acc'] = getBankData()
+    submitObj['message_templates_dict']['main_message'] = getTextHtml('main_phrase_textarea');
     submitObj['message_templates_dict']['sub_message'] = getTextHtml('phrase_textarea');
     submitObj['transport_list'] = getTransportHtml()
     // console.log(submitObj)
