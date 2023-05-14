@@ -26,7 +26,6 @@ def create_app():
     # 앱 설정, 라우트, 확장 등을 여기에 추가
     
     
-    
     app.config['SECRET_KEY'] = secret_key
     app.config['BCRYPT_LEVEL'] = bcrypt_level
 
@@ -42,9 +41,6 @@ def create_app():
     @app.route("/invitation")
     def invitation():
         with session_scope() as db_session:
-            test = db_session.query(User).filter(User.id == 1).first()
-            # name = test.name
-            
             # 더미 존
             from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
             groom_dict = groom_dict # 신랑 데이터
@@ -55,15 +51,15 @@ def create_app():
             guestbook_list = guestbook_list # 방명록 데이터
             # 더미 끝
 
-            temp_user_id = 8    # temp
+            id = session['user']['id']
             
             # groom
             groom = db_session.query(Information)\
-                            .filter(Information.user_id == temp_user_id, Information.relation_id == 1).first()
+                            .filter(Information.user_id == id, Information.relation_id == 1).first()
             groom_father = db_session.query(Information)\
-                                   .filter(Information.user_id == temp_user_id, Information.relation_id == 3).first()
+                                   .filter(Information.user_id == id, Information.relation_id == 3).first()
             groom_mother = db_session.query(Information)\
-                                    .filter(Information.user_id == temp_user_id, Information.relation_id == 5).first()
+                                    .filter(Information.user_id == id, Information.relation_id == 5).first()
             groom_dict = {
                 "firstname" : groom.first_name,
                 "lastname" : groom.last_name,
@@ -81,11 +77,11 @@ def create_app():
             
             # bride
             bride = db_session.query(Information)\
-                            .filter(Information.user_id == temp_user_id, Information.relation_id == 2).first()
+                            .filter(Information.user_id == id, Information.relation_id == 2).first()
             bride_father = db_session.query(Information)\
-                                   .filter(Information.user_id == temp_user_id, Information.relation_id == 4).first()
+                                   .filter(Information.user_id == id, Information.relation_id == 4).first()
             bride_mother = db_session.query(Information)\
-                                    .filter(Information.user_id == temp_user_id, Information.relation_id == 6).first()
+                                    .filter(Information.user_id == id, Information.relation_id == 6).first()
             bride_dict = {
                 "firstname" : bride.first_name,
                 "lastname" : bride.last_name,
@@ -103,14 +99,14 @@ def create_app():
 
             # wedding
             wedding_item = db_session.query(Weddinghall)\
-                                .filter(Weddinghall.user_id ==temp_user_id).first()
+                                .filter(Weddinghall.user_id ==id).first()
             
             weekdays = ['월', '화', '수', '목', '금', '토', '일']
             date = wedding_item.date.weekday()
 
             wedding_schedule_dict = {
                 'date' : (wedding_item.date).strftime('%Y년 %m월 %d일'),
-                'date_format' : wedding_item.date,
+                'date_format' : (wedding_item.date).strftime('%Y-%m-%d'),
                 'time' : '{}요일 {}'.format(weekdays[date], wedding_item.time),
                 'time_hour' : (wedding_item.time).split('시')[0]+'시',
                 'time_minute' : (wedding_item.time).split('시')[1],
@@ -121,14 +117,13 @@ def create_app():
                 'lat' : wedding_item.lat,
                 'lng' : wedding_item.lng
             }
-            print("@#$", wedding_schedule_dict)
 
 
             # message
             message_list = []
             message_type = db_session.query(Texttype).all()
             message_query = db_session.query(Textlist)\
-                                    .filter(Textlist.user_id == temp_user_id)
+                                    .filter(Textlist.user_id == id)
             for i, m in enumerate(message_type):
                 message_list.append({
                     m.name : message_query.filter(Textlist.text_type == i+1).first()
@@ -138,7 +133,7 @@ def create_app():
             # tramsport
             transportation_type = db_session.query(Transportationtype).all()
             transporation_query = db_session.query(Transportation)\
-                                    .filter(Transportation.user_id == temp_user_id)
+                                    .filter(Transportation.user_id == id)
             
             transport_list = []
             for i ,t in enumerate(transportation_type):
@@ -150,7 +145,7 @@ def create_app():
 
             # guestbook
             guestbook_items = db_session.query(Guestbook)\
-                                    .filter(Guestbook.user_id == temp_user_id).all()
+                                    .filter(Guestbook.user_id == id).all()
 
             guestbook_list = []
             for g in guestbook_items:
@@ -164,12 +159,28 @@ def create_app():
 
             
             # image
+            image_query = db_session.query(Picture)\
+                                .filter(Picture.user_id == id)
             image_list = {}
+            image_list['main_img'] = (image_query.filter(Picture.picture_type == 1).first()).url
+            image_list['sub_img'] = (image_query.filter(Picture.picture_type == 2).first()).url
+            
+            gallery_img_list = []
+            img_list = image_query.filter(Picture.picture_type == 3).order_by(Picture.priority).all()
+            img_sm_list = image_query.filter(Picture.picture_type == 4).order_by(Picture.priority).all()
+            print('sm)list',img_sm_list)
+            for i in range(len(img_sm_list)):
+                print("comming")
+                gallery_img_list.append({
+                    'img' : img_list[i].url,
+                    'img_sm' : img_sm_list[i].url
+                })
 
+            image_list['gallery_img'] = gallery_img_list
 
             # account
             account_items = db_session.query(Account)\
-                                    .filter(Account.user_id == temp_user_id).all()
+                                    .filter(Account.user_id == id).all()
             
             groom_acc_list = []
             bride_acc_list = []
@@ -214,7 +225,6 @@ def create_app():
     @app.route("/login", methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
-            print("getcomming???")
             return render_template('/login.html')
         
         if request.method == 'POST':
@@ -229,7 +239,11 @@ def create_app():
                 print("user",user_item)
                 if user_item and bcrypt.checkpw(pw.encode('utf-8'), user_item.user_pw.encode('utf-8')):   # 로그인 성공
                     print("로그인성공")
-                    session['user']=user_item.user_id
+                    session['user'] = {
+                        'id' : user_item.id,
+                        'user_id' : user_item.user_id
+                    }
+                    
                     response = jsonify({'message': 'Success'})
                     response.status_code = 200
                 else:           # 로그인 실패
@@ -397,11 +411,10 @@ def create_app():
 
     @app.route("/create", methods=['GET', 'POST'])
     def create():
-        print("comming///create")
         if request.method == 'GET':
             if 'user' in session:
-                user_id = session['user']
-                print('user,',user_id)
+                id = session['user']['id']
+                user_id = session['user']['user_id']
             else:
                 return render_template('/login.html') 
             
@@ -424,10 +437,10 @@ def create_app():
                                 bank_acc=bank_acc)
             
         if request.method == 'POST':
-            print("comming?")
-            # json_data = request.get_json()
+            id = session['user']['id']
+            user_id = session['user']['user_id']
+
             json_data = json.loads(request.form.get('json'))
-            print("@#$",type(json_data))
 
             groom_dict = json_data['groom_dict']
             bride_dict = json_data['bride_dict']
@@ -436,44 +449,32 @@ def create_app():
             guestbook_password = json_data['guestbook_password']
             bank_acc = json_data['bank_acc']
             transport_list = json_data['transport_list']
-            # print("@@groom_dict",groom_dict)
-            # print("@@bride_dict",bride_dict)
-            print("@@wedding_schedule_dict",wedding_dict)
-            print("@@message_templates_dict",message_dict)
-            print("@@guestbook_password",guestbook_password)
-            print("@@bank_acc",bank_acc)
-            print("@@transport_list",transport_list)
-
-            temp_user_id = 8    # temp
 
             with session_scope() as db_session:
                 # 신랑 / 신부 가족 정보
                 key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherFirstName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
                 for i, d in enumerate([groom_dict, bride_dict]):
                     for check in range(0, 8, 3):
-                        info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], temp_user_id, 1+i if check == 0 else 3+i if check == 3 else 5+i)
+                        info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], id, 1+i if check == 0 else 3+i if check == 3 else 5+i)
                         db_session.add(info_item)
                         db_session.commit()
                         db_session.refresh(info_item)
 
                 # 웨딩홀 정보
-                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], temp_user_id, 0, 0)
+                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], id, 0, 0)
                 db_session.add(wedding_hall_item)
                 db_session.commit()
                 db_session.refresh(wedding_hall_item)
 
                 # 메시지
-                text_type = db_session.query(Texttype).all()
                 for i, m in enumerate(message_dict):
-                    print("@#$",m)
-                    print("@#$@#$", text_type[i].name)
-                    message_item = Textlist(m[text_type[i].name], temp_user_id, i+1)
+                    message_item = Textlist(message_dict[m], id, i+1)
                     db_session.add(message_item)
                     db_session.commit()
                     db_session.refresh(message_item)
 
                 # 방명록 비밀번호 업데이트 -> 디폴트값 0000
-                user_item = db_session.query(User).filter(User.id == temp_user_id).first()
+                user_item = db_session.query(User).filter(User.id == id).first()
                 user_item.guestbook_pw = guestbook_password
                 db_session.commit()
 
@@ -482,12 +483,10 @@ def create_app():
 
                 # 대중교통
                 for i, t in enumerate(transport_list):
-                    transport_item = Transportation(t['contents_transport'], temp_user_id, i+1)
+                    transport_item = Transportation(t['contents_transport'], id, i+1)
                     db_session.add(transport_item)
                     db_session.commit()
                     db_session.refresh(transport_item)
-
-
 
 
             print(request.files)
@@ -496,6 +495,9 @@ def create_app():
             # gallery_img_files = [v for k, v in request.files.items() if k.startswith('gallery_img')]
             gallery_img = {}
             gallery_img_sm = {}
+
+            for k, v in request.files.items():
+                print("file", k, v)
 
             for k, v in request.files.items():
                 if k.startswith('gallery_img') and k.endswith('[img]'):
@@ -509,19 +511,13 @@ def create_app():
             gallery_imgs = [v for k, v in sorted(gallery_img.items())]
             gallery_img_sms = [v for k, v in sorted(gallery_img_sm.items())]
 
-            print('\n\nmain_img_file,',main_img_file)
-            print('\n\nsub_img_file,',sub_img_file)
-            print('\n\ngallery_img,',gallery_img)
-            print('\n\ngallery_img_sm,',gallery_img_sm)
-            
-
             # 이미지
             # ============================================================================
             # 서버에 이미지 저장 코드 완료 
             # 클레어... 저는 대충 하드코딩했는데 이거 함수 만들어서 하면 코드 깔끔해질 듯 부탁드려요~
             # 서버에 계속 파일 만들수 없으니 디비랑 연동 후 주석 제거해서 사용하기
             # 이미지 파일명은 아마 프론트에서 처리했던거 같아요~ 그냥 디비에 그대로 넣기만 하면될듯
-            user_id = session['user']
+            
             UPLOAD_FOLDER = 'app/static/images/users/'
             upload_path = os.path.join(UPLOAD_FOLDER, user_id)
             if not os.path.exists(upload_path):
@@ -543,35 +539,39 @@ def create_app():
             # ============================================================================
             
             # 메인
-            img_item = Picture('{}{}/{}'.format(UPLOAD_FOLDER, temp_user_id, main_img_file.filename), temp_user_id, 1, 1)
+            url = '{}{}/{}'.format(UPLOAD_FOLDER[3:], user_id, main_img_file.filename)
+            img_item = Picture(url, id, 1, 1)
             db_session.add(img_item)
             db_session.commit()
             db_session.refresh(img_item)
 
             # 서브
-            img_item = Picture('{}{}/{}'.format(UPLOAD_FOLDER, temp_user_id, sub_img_file.filename), temp_user_id, 2, 1)
+            url = '{}{}/{}'.format(UPLOAD_FOLDER[3:], user_id, sub_img_file.filename)
+            img_item = Picture(url, id, 2, 1)
             db_session.add(img_item)
             db_session.commit()
             db_session.refresh(img_item)
 
             # 이미지들
             cnt = 1
-            for i, g in enumerate(gallery_img):
-                img_item = Picture('{}{}/{}'.format(UPLOAD_FOLDER, temp_user_id, gallery_img.filename), temp_user_id, 3, cnt)
+            for i, g in enumerate(gallery_imgs):
+                url = '{}{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, 'gallery_img', g.filename)
+                img_item = Picture(url, id, 3, cnt)
                 db_session.add(img_item)
                 db_session.commit()
                 db_session.refresh(img_item)
                 cnt += 1
 
             cnt = 1
-            for i, g in enumerate(gallery_img_sm):
-                img_item = Picture('{}{}/{}'.format(UPLOAD_FOLDER, temp_user_id, gallery_img_sm.filename), temp_user_id, 3, cnt)
+            for i, g in enumerate(gallery_img_sms):
+                url = '{}{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, 'gallery_img_sm', g.filename)
+                img_item = Picture(url, id, 4, cnt)
                 db_session.add(img_item)
                 db_session.commit()
                 db_session.refresh(img_item)
                 cnt += 1
 
-            
+            print("create_fin")
             json_data = request.form.get('json')
             if json_data:
                 data = json.loads(json_data)

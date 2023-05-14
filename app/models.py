@@ -153,14 +153,14 @@ class Picturetype(Base):
 class Picture(Base):
     __tablename__ = 'picture'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    url = Column(String(50), nullable=False)
+    url = Column(String(512), nullable=False)
     user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
     picture_type = Column(Integer, ForeignKey('picture.id'), nullable=False)
     priority = Column(Integer, nullable=True)
 
-    def __init__(self, first_name, last_name, picture_type, priority):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, url, user_id, picture_type, priority):
+        self.url = url
+        self.user_id = user_id
         self.picture_type = picture_type
         self.priority = priority
 
