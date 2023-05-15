@@ -334,7 +334,7 @@ const deleteGuestBook = (id, event) => {
   const postData = new Object();
   postData.password = password
   postData.id = id
-  fetch('delete_gusetbook', {
+  fetch('delete_guestbook', {
     method: 'POST', // 요청 메서드
     headers: {
       'Content-Type': 'application/json' // 요청 헤더 설정

@@ -217,7 +217,7 @@ template create db에 넣기(html텍스트, 이미지 제외)
 =====================
 이미지저장시 gallery_img가 메인+서브까지 추가되어 날라옴
 set_gusetbook함수에 user_id temp로 넣었는데 이거 프론트에서 받아서 그 값 넘겨줘야함
-
+template create할 때 user_hase_template값 넣어야 함. 생성할 때는 template값도 같이 넘겨주기(그리고 이것으로 수정과 생성을 구분)
 
 --DB(tim pc vmware ubuntu server)-- 
 Hostname: 1.220.211.20

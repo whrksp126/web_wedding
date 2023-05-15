@@ -4,8 +4,9 @@ import bcrypt
 # from flask_bcrypt import Bcrypt
 import json
 from datetime import datetime, timedelta
+import shutil
 
-from app.models import session_scope, User, Information, Weddinghall, Transportation, Account, Guestbook, Transportationtype, Textlist, Texttype, Picture, Picturetype
+from app.models import session_scope, User, Information, Weddinghall, Transportation, Account, Guestbook, Transportationtype, Textlist, Texttype, Picture, Picturetype, UserHasTemplate
 from app.config import secret_key, bcrypt_level
 from app.views.index import geocoding
 
@@ -31,28 +32,18 @@ def create_app():
 
     # bcrypt_app = Bcrypt(app) 
 
+    def user_template_info(id):
+        # 더미 존
+        from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
+        groom_dict = groom_dict # 신랑 데이터
+        bride_dict = bride_dict # 신부 데이터
+        wedding_schedule_dict = wedding_schedule_dict # 장소와 시간 데이터
+        message_templates_dict = message_templates_dict # 글귀 데이터
+        transport_list = transport_list # 교통 수단 데이터
+        guestbook_list = guestbook_list # 방명록 데이터
+        # 더미 끝
 
-    @app.route("/")
-    def index():
-        if request.method == 'GET':
-            print('index들어옴')
-            return render_template('/index.html') 
-        
-    @app.route("/invitation")
-    def invitation():
         with session_scope() as db_session:
-            # 더미 존
-            from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
-            groom_dict = groom_dict # 신랑 데이터
-            bride_dict = bride_dict # 신부 데이터
-            wedding_schedule_dict = wedding_schedule_dict # 장소와 시간 데이터
-            message_templates_dict = message_templates_dict # 글귀 데이터
-            transport_list = transport_list # 교통 수단 데이터
-            guestbook_list = guestbook_list # 방명록 데이터
-            # 더미 끝
-
-            id = session['user']['id']
-            
             # groom
             groom = db_session.query(Information)\
                             .filter(Information.user_id == id, Information.relation_id == 1).first()
@@ -209,7 +200,20 @@ def create_app():
                 }
             ]
             
-            image_list = image_list # 이미지 데이터   
+            # image_list = image_list # 이미지 데이터   
+        return groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
+
+    @app.route("/")
+    def index():
+        if request.method == 'GET':
+            print('index들어옴')
+            return render_template('/index.html') 
+        
+    @app.route("/invitation")
+    def invitation():
+        id = session['user']['id']
+        groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(id)
+
         return render_template('invitation.html',  
                             groom_dict=groom_dict, 
                             bride_dict=bride_dict,
@@ -218,7 +222,8 @@ def create_app():
                             transport_list=transport_list,
                             guestbook_list=guestbook_list,
                             image_list=image_list,
-                            bank_acc=bank_acc
+                            bank_acc=bank_acc,
+                            id = session['user']['id']
                             )
 
 
@@ -418,23 +423,29 @@ def create_app():
             else:
                 return render_template('/login.html') 
             
-            # from app.views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
-            from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
-            groom_dict = groom_dict
-            bride_dict = bride_dict
-            bank_acc = bank_acc
-            wedding_schedule_dict = wedding_schedule_dict
-            message_templates_dict = message_templates_dict
-            guestbook_list = guestbook_list
-            return render_template('/create.html',  
-                                groom_dict=groom_dict, 
-                                bride_dict=bride_dict,
-                                wedding_schedule_dict=wedding_schedule_dict,
-                                message_templates_dict=message_templates_dict,
-                                transport_list=transport_list,
-                                guestbook_list=guestbook_list,
-                                image_list=image_list,
-                                bank_acc=bank_acc)
+            with session_scope() as db_session:
+                create_or_update = db_session.query(UserHasTemplate)\
+                                            .filter(UserHasTemplate.user_id == id).first()
+                if create_or_update:    # update시 기존 데이터 보냄
+                    groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(id)
+                else:                   # create
+                    # from app.views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
+                    from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list
+                    groom_dict = groom_dict
+                    bride_dict = bride_dict
+                    bank_acc = bank_acc
+                    wedding_schedule_dict = wedding_schedule_dict
+                    message_templates_dict = message_templates_dict
+                    guestbook_list = guestbook_list
+                return render_template('/create.html',  
+                                    groom_dict=groom_dict, 
+                                    bride_dict=bride_dict,
+                                    wedding_schedule_dict=wedding_schedule_dict,
+                                    message_templates_dict=message_templates_dict,
+                                    transport_list=transport_list,
+                                    guestbook_list=guestbook_list,
+                                    image_list=image_list,
+                                    bank_acc=bank_acc)
             
         if request.method == 'POST':
             id = session['user']['id']
@@ -449,8 +460,32 @@ def create_app():
             guestbook_password = json_data['guestbook_password']
             bank_acc = json_data['bank_acc']
             transport_list = json_data['transport_list']
-
+            
             with session_scope() as db_session:
+                create_or_update = db_session.query(UserHasTemplate)\
+                                            .filter(UserHasTemplate.user_id == id).first()
+                if create_or_update:    # update시 기존 데이터 다 삭제 후 다시 넣음
+                    db_session.query(Account).filter(Account.user_id == id).delete()
+                    db_session.query(Picture).filter(Picture.user_id == id).delete()
+                    db_session.query(Textlist).filter(Textlist.user_id == id).delete()
+                    db_session.query(Transportation).filter(Transportation.user_id == id).delete()
+                    db_session.query(Weddinghall).filter(Weddinghall.user_id == id).delete()
+                    db_session.query(Information).filter(Information.user_id == id).delete()
+                    
+                    # 이미지 폴더도 삭제                    
+                    folder_path = 'app/static/images/users/{}'.format(user_id)
+                    try:
+                        shutil.rmtree(folder_path)
+                        print(f"{folder_path} 폴더와 하위 파일/폴더가 삭제되었습니다.")
+                    except OSError as e:
+                        print(f"{folder_path} 폴더 삭제에 실패했습니다: {e}")
+
+                else:
+                    template_item = UserHasTemplate(id, 1) # temp
+                    db_session.add(template_item)
+                    db_session.commit()
+                    db_session.refresh(template_item)
+
                 # 신랑 / 신부 가족 정보
                 key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherFirstName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
                 for i, d in enumerate([groom_dict, bride_dict]):
@@ -620,8 +655,8 @@ def create_app():
             response.status_code = 200
             return response
 
-    @app.route("/delete_gusetbook", methods=['GET', 'POST'])
-    def delete_gusetbook():
+    @app.route("/delete_guestbook", methods=['GET', 'POST'])
+    def delete_guestbook():
         if request.method == 'POST':
             data = request.get_json()
             password = data['password']
