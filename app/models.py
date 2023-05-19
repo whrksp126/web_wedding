@@ -56,7 +56,7 @@ class Template(Base):
 
 class User(Base):
     __tablename__ = 'user'
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(128), nullable=False)
     user_id = Column(String(512), nullable=False, unique=True)
     user_pw = Column(String(512), nullable=False)
@@ -74,8 +74,9 @@ class User(Base):
 
 class UserHasTemplate(Base):
     __tablename__ = 'user_has_template'
-    user_id = Column(BigInteger, ForeignKey('user.id'), primary_key=True)
-    template_id = Column(Integer, ForeignKey('template.id'), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    template_id = Column(Integer, ForeignKey('template.id'), nullable=False)
 
     def __init__(self, user_id, template_id):
         self.user_id = user_id
@@ -98,14 +99,14 @@ class Account(Base):
     acc_number = Column(String(50), nullable=False)
     acc_name = Column(String(50), nullable=False)
     relation_id = Column(Integer, ForeignKey('relation.id'), nullable=False)
-    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
 
-    def __init__(self, acc_bank, acc_number, acc_name, relation_id, user_id):
+    def __init__(self, acc_bank, acc_number, acc_name, relation_id, usertemplate_id):
         self.acc_bank = acc_bank
         self.acc_number = acc_number
         self.acc_name = acc_name
         self.relation_id = relation_id
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
 
 
 class Guestbook(Base):
@@ -115,13 +116,13 @@ class Guestbook(Base):
     writer_pw = Column(String(50), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     contents = Column(Text, nullable=False)
-    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
 
-    def __init__(self, writer, writer_pw, contents, user_id):
+    def __init__(self, writer, writer_pw, contents, usertemplate_id):
         self.writer = writer
         self.writer_pw = writer_pw
         self.contents = contents
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
 
 
 class Information(Base):
@@ -130,14 +131,14 @@ class Information(Base):
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     tel = Column(String(50), nullable=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    relation_id = Column(BigInteger, ForeignKey('relation.id'), nullable=False)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
+    relation_id = Column(Integer, ForeignKey('relation.id'), nullable=False)
 
-    def __init__(self, first_name, last_name, tel, user_id, relation_id):
+    def __init__(self, first_name, last_name, tel, usertemplate_id, relation_id):
         self.first_name = first_name
         self.last_name = last_name
         self.tel = tel
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
         self.relation_id = relation_id
 
 
@@ -154,13 +155,13 @@ class Picture(Base):
     __tablename__ = 'picture'
     id = Column(Integer, primary_key=True, autoincrement=True)
     url = Column(String(512), nullable=False)
-    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
     picture_type = Column(Integer, ForeignKey('picture.id'), nullable=False)
     priority = Column(Integer, nullable=True)
 
-    def __init__(self, url, user_id, picture_type, priority):
+    def __init__(self, url, usertemplate_id, picture_type, priority):
         self.url = url
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
         self.picture_type = picture_type
         self.priority = priority
 
@@ -178,12 +179,12 @@ class Textlist(Base):
     __tablename__ = 'text_list'
     id = Column(Integer, primary_key=True, autoincrement=True)
     contents = Column(Text, nullable=False)
-    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
     text_type = Column(Integer, ForeignKey('text_type.id'), nullable=False)
 
-    def __init__(self, contents, user_id, text_type):
+    def __init__(self, contents, usertemplate_id, text_type):
         self.contents = contents
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
         self.text_type = text_type
 
 
@@ -200,12 +201,12 @@ class Transportation(Base):
     __tablename__ = 'transportation'
     id = Column(Integer, primary_key=True, autoincrement=True)
     contents = Column(Text, nullable=False)
-    user_id = Column(BigInteger, ForeignKey('user.id'), nullable=False)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
     transportation_type = Column(Integer, ForeignKey('transportation_type.id'), nullable=False)
 
-    def __init__(self, contents, user_id, transportation_type):
+    def __init__(self, contents, usertemplate_id, transportation_type):
         self.contents = contents
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
         self.transportation_type = transportation_type
 
 
@@ -217,17 +218,17 @@ class Weddinghall(Base):
     address_detail = Column(String(256), nullable=False, unique=True)
     date = Column(Date, nullable=False)
     time = Column(String(128), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), default=None)
+    usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), default=None)
     lat = Column(Float, nullable=False)
     lng = Column(Float, nullable=False)
 
-    def __init__(self, name, address, address_detail, date, time, user_id, lat, lng):
+    def __init__(self, name, address, address_detail, date, time, usertemplate_id, lat, lng):
         self.name = name
         self.address = address
         self.address_detail = address_detail
         self.date = date
         self.time = time
-        self.user_id = user_id
+        self.usertemplate_id = usertemplate_id
         self.lat = lat
         self.lng = lng
 

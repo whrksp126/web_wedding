@@ -704,7 +704,8 @@ const getInputData = () => {
     submitObj['message_templates_dict']['main_message'] = getTextHtml('main_phrase_textarea');
     submitObj['message_templates_dict']['sub_message'] = getTextHtml('phrase_textarea');
     submitObj['transport_list'] = getTransportHtml()
-    // console.log(submitObj)
+    submitObj['template_id'] = template_id
+    console.log(submitObj)
 
 
     const formData = getImgData()
@@ -712,6 +713,7 @@ const getInputData = () => {
     postApi('/create', formData, callbackFun)
 
 }
+
 const callbackFun = (data) => {
     console.log('성공', data)
 }
