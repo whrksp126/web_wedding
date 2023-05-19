@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popup and Redirect</title>
+    <script>
+        function popupAndRedirect() {
+            alert('{{ contents }}');
+            {% if url is not none %}
+                window.location.href = "{{ url }}";
+            {% else %}
+                window.history.back
+            {% endif %}
+        }
+    </script>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            popupAndRedirect();
+        };
+    </script>
+</body>
+</html>
