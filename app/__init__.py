@@ -25,8 +25,8 @@ bank_acc = bank_acc # 계좌번호 데이터
 def create_app():
     app = Flask(__name__)
     # 앱 설정, 라우트, 확장 등을 여기에 추가
-    
-    
+ 
+ 
     app.config['SECRET_KEY'] = secret_key
     app.config['BCRYPT_LEVEL'] = bcrypt_level
 
@@ -212,6 +212,7 @@ def create_app():
     @app.route("/invitation")
     def invitation():
         id = session['user']['id']
+        print("@$@#$id", id)
         groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(id)
 
         return render_template('invitation.html',  
