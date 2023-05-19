@@ -377,7 +377,6 @@ def create_app():
             transport_list = json_data['transport_list']
 
             template_id = int(json_data['template_id'])
-            
             with session_scope() as db_session:
                 usertemplate_item = db_session.query(UserHasTemplate)\
                                             .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()

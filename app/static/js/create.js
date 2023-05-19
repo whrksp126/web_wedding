@@ -16,11 +16,11 @@ const changeInputImg = (target) => {
     const reader = new FileReader();
     reader.readAsDataURL(fileList[0]);
     reader.onload = () =>  {
-        
-        originImg.src = reader.result // origin img 넣기
-        originImg.setAttribute('data-type','gallery_img')
-        originImg.setAttribute('data-name','img')
-
+        if(!isMainImageInfo){
+            originImg.src = reader.result // origin img 넣기
+            originImg.setAttribute('data-type','gallery_img')
+            originImg.setAttribute('data-name','img')
+        }
         const tempImage = new Image(); //drawImage 메서드에 넣기 위해 이미지 객체화
         // 썸네일 이미지 생성
         tempImage.src = reader.result; //data-uri를 이미지 객체에 주입
@@ -557,7 +557,8 @@ const getImgData = () =>{
     const __mainSubImgList = [... _mainImg, ..._subImg]
     const __galleryImgList = document.querySelectorAll('[data-type="gallery_img"][data-name="img"]') 
     const __gallerySmImgList = document.querySelectorAll('[data-type="gallery_img"][data-name="img_sm"]') 
-    
+    console.log(__galleryImgList)
+    console.log(__gallerySmImgList)
     const formData = new FormData();
     __mainSubImgList.forEach((_imgList)=>{
         const key = _imgList.getAttribute('data-name');
