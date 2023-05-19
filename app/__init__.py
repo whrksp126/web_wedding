@@ -25,8 +25,8 @@ bank_acc = bank_acc # 계좌번호 데이터
 def create_app():
     app = Flask(__name__)
     # 앱 설정, 라우트, 확장 등을 여기에 추가
-    
-    
+ 
+ 
     app.config['SECRET_KEY'] = secret_key
     app.config['BCRYPT_LEVEL'] = bcrypt_level
 
