@@ -16,8 +16,8 @@ const changeInputImg = (target) => {
     const reader = new FileReader();
     reader.readAsDataURL(fileList[0]);
     reader.onload = () =>  {
+        originImg.src = reader.result // origin img 넣기
         if(!isMainImageInfo){
-            originImg.src = reader.result // origin img 넣기
             originImg.setAttribute('data-type','gallery_img')
             originImg.setAttribute('data-name','img')
         }
