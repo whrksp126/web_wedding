@@ -10,5 +10,12 @@ const loginSubmit = (event) =>{
 }
 
 const callbackFun = (data) => {
-  window.location = '/'
+  if (data['message'] == 'Success') {
+    window.location = '/'
+  } else {
+    const contents = data['contents']
+    const url = data['url']
+    window.location.href = '/pop_up?contents='+contents+"&url="+url
+  }
+
 }

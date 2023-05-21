@@ -275,9 +275,11 @@ const submitGuestbook = () => {
   const password = document.querySelector('.c-guestbook-delete-modal input[type="password"]').value
   const content = document.querySelector('.c-guestbook-delete-modal textarea').value
   const postData = new Object();
+  console.log("useetemp",usertemplate_id)
   postData.name = name
   postData.password = password
   postData.content = content
+  postData.usertemplate_id = usertemplate_id
   // search_geocoding
   fetch('set_gusetbook', {
       method: 'POST', // 요청 메서드

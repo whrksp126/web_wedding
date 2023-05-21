@@ -10,6 +10,9 @@ const registerSubmit = (event) =>{
 }
 
 const callbackFun = (data) => {
-  console.log(data)
+  console.log("register_data",data)
+  const contents = data['contents']
+  const url = data['url']
+  window.location.href = '/pop_up?contents='+contents+"&url="+url
 
 };

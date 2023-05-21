@@ -98,15 +98,15 @@ class Account(Base):
     acc_bank = Column(String(50), nullable=False)
     acc_number = Column(String(50), nullable=False)
     acc_name = Column(String(50), nullable=False)
-    relation_id = Column(Integer, ForeignKey('relation.id'), nullable=False)
     usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
+    relation_id = Column(Integer, ForeignKey('relation.id'), nullable=False)
 
-    def __init__(self, acc_bank, acc_number, acc_name, relation_id, usertemplate_id):
+    def __init__(self, acc_bank, acc_number, acc_name, usertemplate_id, relation_id):
         self.acc_bank = acc_bank
         self.acc_number = acc_number
         self.acc_name = acc_name
-        self.relation_id = relation_id
         self.usertemplate_id = usertemplate_id
+        self.relation_id = relation_id
 
 
 class Guestbook(Base):
@@ -114,9 +114,9 @@ class Guestbook(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     writer = Column(String(50), nullable=False)
     writer_pw = Column(String(50), nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     contents = Column(Text, nullable=False)
     usertemplate_id = Column(Integer, ForeignKey('user_has_template.id'), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.datetime.now())
 
     def __init__(self, writer, writer_pw, contents, usertemplate_id):
         self.writer = writer

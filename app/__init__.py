@@ -32,6 +32,13 @@ def create_app():
 
     # bcrypt_app = Bcrypt(app) 
 
+    @app.route('/pop_up', methods=['POST', 'GET'])
+    def pop_up():
+        contents = request.args.get('contents')
+        url = request.args.get('url')
+
+        return render_template('/pop_up.html', contents=contents, url=url)
+
     def user_template_info(usertemplate_id):
         # 더미 존
         from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
@@ -111,14 +118,12 @@ def create_app():
 
 
             # message
-            message_list = []
+            message_templates_dict = {}
             message_type = db_session.query(Texttype).all()
             message_query = db_session.query(Textlist)\
                                     .filter(Textlist.usertemplate_id == usertemplate_id)
             for i, m in enumerate(message_type):
-                message_list.append({
-                    m.name : message_query.filter(Textlist.text_type == i+1).first()
-                })
+                message_templates_dict[m.name] = (message_query.filter(Textlist.text_type == i+1).first()).contents
 
 
             # tramsport
@@ -145,7 +150,7 @@ def create_app():
                     "name" : g.writer,
                     "content_guestbook" : g.contents,
                     "password" : g.writer_pw,
-                    "created_at" : g.created_at
+                    "created_at" : (g.created_at).strftime('%Y.%m.%d')
                 })
 
             
@@ -199,7 +204,6 @@ def create_app():
                     "list" : bride_acc_list
                 }
             ]
-            
             # image_list = image_list # 이미지 데이터   
         return groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
 
@@ -207,7 +211,8 @@ def create_app():
     def index():
         if request.method == 'GET':
             print('index들어옴')
-            return render_template('/index.html') 
+            return render_template('/index.html', 
+                                   id=session['user']['id'] if 'user' in session else None) 
         
     @app.route("/invitation", methods=['POST', 'GET'])
     def invitation():
@@ -225,20 +230,24 @@ def create_app():
             bank_acc = bank_acc
             groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
         else:               # 내 청첩장 보기
-            id = session['user']['id']
+            id = request.args.get('id', type=int)
             template_id = request.args.get('template_id', type=int)
+
+            if id is None:      # 로그인 안 한 경우
+                return render_template('pop_up.html',
+                                       contents='로그인을 해주세요.',
+                                       url='/login')
 
             with session_scope() as db_session:
                 usertemplate_item = db_session.query(UserHasTemplate)\
                                             .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
-                
                 if not usertemplate_item:   # 청첩장 만들지 않은 경우
                     return render_template('pop_up.html',
                                             contents='청첩장을 만들어주세요',
                                             url='/')
                 else:    
+                    usertemplate_id = usertemplate_item.id
                     groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(usertemplate_item.id)
-
         return render_template('invitation.html',  
                             groom_dict=groom_dict, 
                             bride_dict=bride_dict,
@@ -248,7 +257,7 @@ def create_app():
                             guestbook_list=guestbook_list,
                             image_list=image_list,
                             bank_acc=bank_acc,
-                            id = id if not is_sample else None
+                            usertemplate_id = usertemplate_id if not is_sample and usertemplate_item else None
                             )
 
 
@@ -266,19 +275,17 @@ def create_app():
             with session_scope() as db_session:
                 user_item = db_session.query(User).filter(User.user_id == id).first()
 
-                print("user",user_item)
                 if user_item and bcrypt.checkpw(pw.encode('utf-8'), user_item.user_pw.encode('utf-8')):   # 로그인 성공
                     print("로그인성공")
                     session['user'] = {
                         'id' : user_item.id,
                         'user_id' : user_item.user_id
-                    }
-                    
+                    } 
                     response = jsonify({'message': 'Success'})
                     response.status_code = 200
                 else:           # 로그인 실패
                     print("로그인실패")
-                    response = jsonify({'message': 'Success'})
+                    response = jsonify({'message': 'Failed', 'contents':'아이디 비밀번호를 다시 확인해주세요.', 'url':'/login'})
                     response.status_code = 401
                     
             return response
@@ -305,19 +312,17 @@ def create_app():
                     db_session.commit()
                     db_session.refresh(user_item)
                 print("회원가입 성공")
-                contents = '회원가입 성공!<br>로그인을 해주세요.'
+                contents = '회원가입 성공! 로그인을 해주세요.'
                 url = '/login'
+                response = jsonify({'message': 'Success', 'contents':contents, 'url':url})
+                response.status_code = 200
             except:
                 print("회원가입 실패")
-                contents = '회원가입 실패'
+                contents = '회원가입 실패. 다시 회원가입 해주세요.'
                 url = '/register'
-                
-            return render_template('/pop_up.html',
-                                    contents=contents,
-                                    url=url)
-            # response = jsonify({'message': 'Success'})
-            # response.status_code = 200
-            # return response
+                response = jsonify({'message': 'Failed', 'contents':contents, 'url':url})
+                response.status_code = 500
+            return response
 
 
     @app.route("/create", methods=['GET', 'POST'])
@@ -329,7 +334,9 @@ def create_app():
                 user_id = session['user']['user_id']
                 template_id = request.args.get('template_id', type=int)
             else:
-                return render_template('/login.html') 
+                return render_template('pop_up.html',
+                                       contents='로그인을 해주세요.',
+                                       url='/login')
             
             with session_scope() as db_session:
                 usertemplate_item = db_session.query(UserHasTemplate)\
@@ -342,15 +349,19 @@ def create_app():
                     else:
                         groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(usertemplate_item.id)
                 else:                   # create
+                    if usertemplate_item:   # 이미 해당 탬플릿을 만들었다면
+                        return render_template('pop_up.html',
+                                                contents='이미 만든 템플릿입니다. 수정하기를 이용해주세요.',
+                                                url='/')                        
                     # from app.views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
                     from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
-                    groom_dict = groom_dict
-                    bride_dict = bride_dict
-                    bank_acc = bank_acc
-                    wedding_schedule_dict = wedding_schedule_dict
-                    message_templates_dict = message_templates_dict
-                    guestbook_list = guestbook_list
-                    image_list = image_list
+                    # groom_dict = groom_dict
+                    # bride_dict = bride_dict
+                    # bank_acc = bank_acc
+                    # wedding_schedule_dict = wedding_schedule_dict
+                    # message_templates_dict = message_templates_dict
+                    # guestbook_list = guestbook_list
+                    # image_list = image_list
                 return render_template('/create.html',  
                                     groom_dict=groom_dict, 
                                     bride_dict=bride_dict,
@@ -375,6 +386,9 @@ def create_app():
             guestbook_password = json_data['guestbook_password']
             bank_acc = json_data['bank_acc']
             transport_list = json_data['transport_list']
+
+            print("@#$groom_dict", groom_dict)
+            print("@#$wedding_dict", wedding_dict)
 
             template_id = int(json_data['template_id'])
             with session_scope() as db_session:
@@ -407,8 +421,9 @@ def create_app():
                                             .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
                 usertemplate_id = usertemplate_item.id
 
+                # 정보 입력 시작
                 # 신랑 / 신부 가족 정보
-                key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherFirstName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
+                key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherLastName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
                 for i, d in enumerate([groom_dict, bride_dict]):
                     for check in range(0, 8, 3):
                         info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], usertemplate_id, 1+i if check == 0 else 3+i if check == 3 else 5+i)
@@ -417,7 +432,7 @@ def create_app():
                         db_session.refresh(info_item)
 
                 # 웨딩홀 정보
-                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], usertemplate_id, 0, 0)
+                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], usertemplate_id, wedding_dict['lat'], wedding_dict['lng'])
                 db_session.add(wedding_hall_item)
                 db_session.commit()
                 db_session.refresh(wedding_hall_item)
@@ -435,9 +450,16 @@ def create_app():
                 db_session.commit()
 
                 # 계좌
-                # 계좌 디비 좀 수정해야할듯
+                for i, group in enumerate(bank_acc):
+                    for g in group['list']:
+                        bank_item = Account(g['bank'], g['number'], g['name'], usertemplate_id, i+1)
+                        db_session.add(bank_item)
+                        db_session.commit()
+                        db_session.refresh(bank_item)
 
                 # 대중교통
+                print("transport",transport_list)
+                print("transport",transport_list[0]['contents_transport'])
                 for i, t in enumerate(transport_list):
                     transport_item = Transportation(t['contents_transport'], usertemplate_id, i+1)
                     db_session.add(transport_item)
@@ -566,11 +588,12 @@ def create_app():
     def set_gusetbook():
         if request.method == 'POST':
             data = request.get_json()
+            usertemplate_id = data['usertemplate_id']
             name = data['name']
             password = data['password']
             content = data['content']
             with session_scope() as db_session:
-                guesstbook_item = Guestbook(name, password, datetime.utcnow + timedelta(hours=9), content, 5) # temp
+                guesstbook_item = Guestbook(name, password, content, usertemplate_id)
                 db_session.add(guesstbook_item)
                 db_session.commit()
                 db_session.refresh(guesstbook_item)
@@ -603,7 +626,7 @@ def create_app():
     @app.route('/logout')
     def logout():
         session.pop('user', None)
-        return render_template('/login.html') 
+        return render_template('/pop_up.html', contents='로그아웃 되었습니다.', url='/login') 
         
         
         
