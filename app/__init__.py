@@ -367,197 +367,209 @@ def create_app():
                                     template_id = template_id)
             
         if request.method == 'POST':
-            id = session['user']['id']
-            user_id = session['user']['user_id']
+            try:
+                id = session['user']['id']
+                user_id = session['user']['user_id']
 
-            json_data = json.loads(request.form.get('json'))
+                json_data = json.loads(request.form.get('json'))
 
-            groom_dict = json_data['groom_dict']
-            bride_dict = json_data['bride_dict']
-            wedding_dict = json_data['wedding_schedule_dict']
-            message_dict = json_data['message_templates_dict']
-            guestbook_password = json_data['guestbook_password']
-            bank_acc = json_data['bank_acc']
-            transport_list = json_data['transport_list']
+                groom_dict = json_data['groom_dict']
+                bride_dict = json_data['bride_dict']
+                wedding_dict = json_data['wedding_schedule_dict']
+                message_dict = json_data['message_templates_dict']
+                guestbook_password = json_data['guestbook_password']
+                bank_acc = json_data['bank_acc']
+                transport_list = json_data['transport_list']
 
-            print("@#$groom_dict", groom_dict)
-            print("@#$wedding_dict", wedding_dict)
+                print("@#$groom_dict", groom_dict)
+                print("@#$wedding_dict", wedding_dict)
 
-            template_id = int(json_data['template_id'])
-            with session_scope() as db_session:
-                usertemplate_item = db_session.query(UserHasTemplate)\
-                                            .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
-                if is_edit:    # update시 기존 데이터 다 삭제 후 다시 넣음
-                    usertemplate_id = usertemplate_item.id
-                    db_session.query(Account).filter(Account.usertemplate_id == usertemplate_id).delete()
-                    db_session.query(Picture).filter(Picture.usertemplate_id == usertemplate_id).delete()
-                    db_session.query(Textlist).filter(Textlist.usertemplate_id == usertemplate_id).delete()
-                    db_session.query(Transportation).filter(Transportation.usertemplate_id == usertemplate_id).delete()
-                    db_session.query(Weddinghall).filter(Weddinghall.usertemplate_id == usertemplate_id).delete()
-                    db_session.query(Information).filter(Information.usertemplate_id == usertemplate_id).delete()
+                template_id = int(json_data['template_id'])
+                with session_scope() as db_session:
+                    usertemplate_item = db_session.query(UserHasTemplate)\
+                                                .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
+                    if is_edit:    # update시 기존 데이터 다 삭제 후 다시 넣음
+                        usertemplate_id = usertemplate_item.id
+                        db_session.query(Account).filter(Account.usertemplate_id == usertemplate_id).delete()
+                        db_session.query(Picture).filter(Picture.usertemplate_id == usertemplate_id).delete()
+                        db_session.query(Textlist).filter(Textlist.usertemplate_id == usertemplate_id).delete()
+                        db_session.query(Transportation).filter(Transportation.usertemplate_id == usertemplate_id).delete()
+                        db_session.query(Weddinghall).filter(Weddinghall.usertemplate_id == usertemplate_id).delete()
+                        db_session.query(Information).filter(Information.usertemplate_id == usertemplate_id).delete()
+                        
+                        # 이미지 폴더도 삭제                    
+                        folder_path = 'app/static/images/users/{}/{}'.format(template_id, user_id)
+                        try:
+                            shutil.rmtree(folder_path)
+                            print(f"{folder_path} 폴더와 하위 파일/폴더가 삭제되었습니다.")
+                        except OSError as e:
+                            print(f"{folder_path} 폴더 삭제에 실패했습니다: {e}")
+
+                    else:
+                        template_item = UserHasTemplate(id, template_id)
+                        db_session.add(template_item)
+                        db_session.commit()
+                        db_session.refresh(template_item)
                     
-                    # 이미지 폴더도 삭제                    
-                    folder_path = 'app/static/images/users/{}/{}'.format(template_id, user_id)
-                    try:
-                        shutil.rmtree(folder_path)
-                        print(f"{folder_path} 폴더와 하위 파일/폴더가 삭제되었습니다.")
-                    except OSError as e:
-                        print(f"{folder_path} 폴더 삭제에 실패했습니다: {e}")
+                    usertemplate_item = db_session.query(UserHasTemplate)\
+                                                .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
+                    usertemplate_id = usertemplate_item.id
 
-                else:
-                    template_item = UserHasTemplate(id, template_id)
-                    db_session.add(template_item)
+                    # 정보 입력 시작
+                    # 신랑 / 신부 가족 정보
+                    key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherLastName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
+                    for i, d in enumerate([groom_dict, bride_dict]):
+                        for check in range(0, 8, 3):
+                            info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], usertemplate_id, 1+i if check == 0 else 3+i if check == 3 else 5+i)
+                            db_session.add(info_item)
+                            db_session.commit()
+                            db_session.refresh(info_item)
+
+                    # 웨딩홀 정보
+                    wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], usertemplate_id, wedding_dict['lat'], wedding_dict['lng'])
+                    db_session.add(wedding_hall_item)
                     db_session.commit()
-                    db_session.refresh(template_item)
-                
-                usertemplate_item = db_session.query(UserHasTemplate)\
-                                            .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
-                usertemplate_id = usertemplate_item.id
+                    db_session.refresh(wedding_hall_item)
 
-                # 정보 입력 시작
-                # 신랑 / 신부 가족 정보
-                key_list = ['firstname', 'lastname', 'phoneNum', 'fatherFirstName', 'fatherLastName', 'fatherPhoneNum', 'motherFirstName', 'motherLastName', 'motherPhoneNum']
-                for i, d in enumerate([groom_dict, bride_dict]):
-                    for check in range(0, 8, 3):
-                        info_item = Information(d[key_list[check]], d[key_list[check+1]], d[key_list[check+2]], usertemplate_id, 1+i if check == 0 else 3+i if check == 3 else 5+i)
-                        db_session.add(info_item)
+                    # 메시지
+                    for i, m in enumerate(message_dict):
+                        message_item = Textlist(message_dict[m], usertemplate_id, i+1)
+                        db_session.add(message_item)
                         db_session.commit()
-                        db_session.refresh(info_item)
+                        db_session.refresh(message_item)
 
-                # 웨딩홀 정보
-                wedding_hall_item = Weddinghall(wedding_dict['hall_name'], wedding_dict['hall_addr'], wedding_dict['hall_floor'], wedding_dict['date'], wedding_dict['time_hour']+wedding_dict['time_minute'], usertemplate_id, wedding_dict['lat'], wedding_dict['lng'])
-                db_session.add(wedding_hall_item)
-                db_session.commit()
-                db_session.refresh(wedding_hall_item)
-
-                # 메시지
-                for i, m in enumerate(message_dict):
-                    message_item = Textlist(message_dict[m], usertemplate_id, i+1)
-                    db_session.add(message_item)
+                    # 방명록 비밀번호 업데이트 -> 디폴트값 0000
+                    user_item = db_session.query(User).filter(User.id == id).first()
+                    user_item.guestbook_pw = guestbook_password['password']
                     db_session.commit()
-                    db_session.refresh(message_item)
 
-                # 방명록 비밀번호 업데이트 -> 디폴트값 0000
-                user_item = db_session.query(User).filter(User.id == id).first()
-                user_item.guestbook_pw = guestbook_password['password']
-                db_session.commit()
+                    # 계좌
+                    for i, group in enumerate(bank_acc):
+                        for g in group['list']:
+                            bank_item = Account(g['bank'], g['number'], g['name'], usertemplate_id, i+1)
+                            db_session.add(bank_item)
+                            db_session.commit()
+                            db_session.refresh(bank_item)
 
-                # 계좌
-                for i, group in enumerate(bank_acc):
-                    for g in group['list']:
-                        bank_item = Account(g['bank'], g['number'], g['name'], usertemplate_id, i+1)
-                        db_session.add(bank_item)
+                    # 대중교통
+                    print("transport",transport_list)
+                    print("transport",transport_list[0]['contents_transport'])
+                    for i, t in enumerate(transport_list):
+                        transport_item = Transportation(t['contents_transport'], usertemplate_id, i+1)
+                        db_session.add(transport_item)
                         db_session.commit()
-                        db_session.refresh(bank_item)
-
-                # 대중교통
-                print("transport",transport_list)
-                print("transport",transport_list[0]['contents_transport'])
-                for i, t in enumerate(transport_list):
-                    transport_item = Transportation(t['contents_transport'], usertemplate_id, i+1)
-                    db_session.add(transport_item)
-                    db_session.commit()
-                    db_session.refresh(transport_item)
+                        db_session.refresh(transport_item)
 
 
-            print(request.files)
-            main_img_file = request.files['main_img']
-            sub_img_file = request.files['sub_img']
-            # gallery_img_files = [v for k, v in request.files.items() if k.startswith('gallery_img')]
-            gallery_img = {}
-            gallery_img_sm = {}
+                print(request.files)
+                main_img_file = request.files['main_img']
+                sub_img_file = request.files['sub_img']
+                # gallery_img_files = [v for k, v in request.files.items() if k.startswith('gallery_img')]
+                gallery_img = {}
+                gallery_img_sm = {}
 
-            for k, v in request.files.items():
-                print("file", k, v)
+                for k, v in request.files.items():
+                    print("file", k, v)
 
-            for k, v in request.files.items():
-                if k.startswith('gallery_img') and k.endswith('[img]'):
-                    idx = int(k.split('[')[1].split(']')[0])
-                    gallery_img[idx] = v
-                elif k.startswith('gallery_img') and k.endswith('[img_sm]'):
-                    idx = int(k.split('[')[1].split(']')[0])
-                    gallery_img_sm[idx] = v
+                for k, v in request.files.items():
+                    if k.startswith('gallery_img') and k.endswith('[img]'):
+                        idx = int(k.split('[')[1].split(']')[0])
+                        gallery_img[idx] = v
+                    elif k.startswith('gallery_img') and k.endswith('[img_sm]'):
+                        idx = int(k.split('[')[1].split(']')[0])
+                        gallery_img_sm[idx] = v
 
-            # 정렬
-            gallery_imgs = [v for k, v in sorted(gallery_img.items())]
-            gallery_img_sms = [v for k, v in sorted(gallery_img_sm.items())]
+                # 정렬
+                gallery_imgs = [v for k, v in sorted(gallery_img.items())]
+                gallery_img_sms = [v for k, v in sorted(gallery_img_sm.items())]
 
-            # 이미지
-            # ============================================================================
-            # 서버에 이미지 저장 코드 완료 
-            # 클레어... 저는 대충 하드코딩했는데 이거 함수 만들어서 하면 코드 깔끔해질 듯 부탁드려요~
-            # 서버에 계속 파일 만들수 없으니 디비랑 연동 후 주석 제거해서 사용하기
-            # 이미지 파일명은 아마 프론트에서 처리했던거 같아요~ 그냥 디비에 그대로 넣기만 하면될듯
-            
-            UPLOAD_FOLDER = 'app/static/images/users/'
-            # upload_path = os.path.join(UPLOAD_FOLDER, user_id, str(template_id)).replace('\\', '/')
-            upload_path = '{}{}/{}'.format(UPLOAD_FOLDER, user_id, template_id)
-            if not os.path.exists(upload_path):
-                os.makedirs(upload_path) # app/static/images/users/user_id/template_id 가 없으면 폴더 생성        
-            main_img_file.save(os.path.join(upload_path, main_img_file.filename))
-            sub_img_file.save(os.path.join(upload_path, sub_img_file.filename))
-            
-            print("upload_folder", UPLOAD_FOLDER)
-            # upload_path = os.path.join(UPLOAD_FOLDER, user_id, str(template_id), '/gallery_img/').replace('\\', '/')
-            upload_path = '{}{}/{}/{}'.format(UPLOAD_FOLDER, user_id, template_id, '/gallery_img/')
-            print("\n\n\n@@@",upload_path)
-            if not os.path.exists(upload_path):
-                print("comminggggggggggg")
-                os.makedirs(upload_path)
-            for gallery_img in gallery_imgs:
-                gallery_img.save(os.path.join(upload_path, gallery_img.filename))
+                # 이미지
+                # ============================================================================
+                # 서버에 이미지 저장 코드 완료 
+                # 클레어... 저는 대충 하드코딩했는데 이거 함수 만들어서 하면 코드 깔끔해질 듯 부탁드려요~
+                # 서버에 계속 파일 만들수 없으니 디비랑 연동 후 주석 제거해서 사용하기
+                # 이미지 파일명은 아마 프론트에서 처리했던거 같아요~ 그냥 디비에 그대로 넣기만 하면될듯
                 
-            # upload_path = os.path.join(UPLOAD_FOLDER, user_id, str(template_id), '/gallery_img_sm/').replace('\\', '/')
-            upload_path = '{}{}/{}/{}/'.format(UPLOAD_FOLDER, user_id, template_id, '/gallery_img_sm/')
-            if not os.path.exists(upload_path):
-                os.makedirs(upload_path)
-            for gallery_img_sm in gallery_img_sms:
-                gallery_img_sm.save(os.path.join(upload_path, gallery_img_sm.filename))
-            # ============================================================================
-            
-            # 메인
-            url = '{}{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, main_img_file.filename)
-            img_item = Picture(url, usertemplate_id, 1, 1)
-            db_session.add(img_item)
-            db_session.commit()
-            db_session.refresh(img_item)
-
-            # 서브
-            url = '{}{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, sub_img_file.filename)
-            img_item = Picture(url, usertemplate_id, 2, 1)
-            db_session.add(img_item)
-            db_session.commit()
-            db_session.refresh(img_item)
-
-            # 이미지들
-            cnt = 1
-            for i, g in enumerate(gallery_imgs):
-                url = '{}{}/{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, 'gallery_img', g.filename)
-                img_item = Picture(url, usertemplate_id, 3, cnt)
+                UPLOAD_FOLDER = 'app/static/images/users/'
+                # upload_path = os.path.join(UPLOAD_FOLDER, user_id, str(template_id)).replace('\\', '/')
+                upload_path = '{}{}/{}'.format(UPLOAD_FOLDER, user_id, template_id)
+                if not os.path.exists(upload_path):
+                    os.makedirs(upload_path) # app/static/images/users/user_id/template_id 가 없으면 폴더 생성        
+                main_img_file.save(os.path.join(upload_path, main_img_file.filename))
+                sub_img_file.save(os.path.join(upload_path, sub_img_file.filename))
+                
+                print("upload_folder", UPLOAD_FOLDER)
+                # upload_path = os.path.join(UPLOAD_FOLDER, user_id, str(template_id), '/gallery_img/').replace('\\', '/')
+                upload_path = '{}{}/{}/{}'.format(UPLOAD_FOLDER, user_id, template_id, '/gallery_img/')
+                print("\n\n\n@@@",upload_path)
+                if not os.path.exists(upload_path):
+                    print("comminggggggggggg")
+                    os.makedirs(upload_path)
+                for gallery_img in gallery_imgs:
+                    gallery_img.save(os.path.join(upload_path, gallery_img.filename))
+                    
+                # upload_path = os.path.join(UPLOAD_FOLDER, user_id, str(template_id), '/gallery_img_sm/').replace('\\', '/')
+                upload_path = '{}{}/{}/{}/'.format(UPLOAD_FOLDER, user_id, template_id, '/gallery_img_sm/')
+                if not os.path.exists(upload_path):
+                    os.makedirs(upload_path)
+                for gallery_img_sm in gallery_img_sms:
+                    gallery_img_sm.save(os.path.join(upload_path, gallery_img_sm.filename))
+                # ============================================================================
+                
+                # 메인
+                url = '{}{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, main_img_file.filename)
+                img_item = Picture(url, usertemplate_id, 1, 1)
                 db_session.add(img_item)
                 db_session.commit()
                 db_session.refresh(img_item)
-                cnt += 1
 
-            cnt = 1
-            for i, g in enumerate(gallery_img_sms):
-                url = '{}{}/{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, 'gallery_img_sm', g.filename)
-                img_item = Picture(url, usertemplate_id, 4, cnt)
+                # 서브
+                url = '{}{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, sub_img_file.filename)
+                img_item = Picture(url, usertemplate_id, 2, 1)
                 db_session.add(img_item)
                 db_session.commit()
                 db_session.refresh(img_item)
-                cnt += 1
 
-            print("create_fin")
-            json_data = request.form.get('json')
-            if json_data:
-                data = json.loads(json_data)
-                print(data)
-        response = jsonify({
-            'message': 'Success'
-        })
-        response.status_code = 200
-        return response
+                # 이미지들
+                cnt = 1
+                for i, g in enumerate(gallery_imgs):
+                    url = '{}{}/{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, 'gallery_img', g.filename)
+                    img_item = Picture(url, usertemplate_id, 3, cnt)
+                    db_session.add(img_item)
+                    db_session.commit()
+                    db_session.refresh(img_item)
+                    cnt += 1
+
+                cnt = 1
+                for i, g in enumerate(gallery_img_sms):
+                    url = '{}{}/{}/{}/{}'.format(UPLOAD_FOLDER[3:], user_id, template_id, 'gallery_img_sm', g.filename)
+                    img_item = Picture(url, usertemplate_id, 4, cnt)
+                    db_session.add(img_item)
+                    db_session.commit()
+                    db_session.refresh(img_item)
+                    cnt += 1
+
+                print("create_fin")
+                json_data = request.form.get('json')
+                if json_data:
+                    data = json.loads(json_data)
+                    print(data)
+                response = jsonify({
+                    'message': 'Success',
+                    'contents': "저장 성공",
+                    'url':  "/"
+                })
+                response.status_code = 200
+            except:
+                print("저장 실패")
+                response = jsonify({
+                    'message': 'Failed',
+                    'contents': "저장 실패",
+                    'url':  "/create"
+                })
+                response.status_code = 500
+            return response
+
 
 
     @app.route("/search_geocoding", methods=['GET', 'POST'])

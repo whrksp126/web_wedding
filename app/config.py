@@ -1,9 +1,9 @@
 # ubuntu DB
 DATABASE_USER = 'user'
 DATABASE_PASSWORD = 'password'
-DATABASE_HOST = 'heroworks.iptime.org'
-DATABASE_PORT = '20233'
-DATABASE_DB = 'new_wedding'
+DATABASE_HOST = '58.126.10.31'
+DATABASE_PORT = '33061'
+DATABASE_DB = 'wedding'
 
 # geocoding
 client_id = "ko0r34e7m9"

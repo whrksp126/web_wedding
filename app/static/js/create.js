@@ -717,6 +717,15 @@ const getInputData = () => {
 
 const callbackFun = (data) => {
     console.log('성공', data)
+    if (data['message'] == 'Success') {
+        const contents = data['contents']
+        const url = data['url']
+        window.location.href = '/pop_up?contents='+contents+"&url="+url
+      } else {
+        const contents = data['contents']
+        const url = data['url']
+        window.location.href = '/pop_up?contents='+contents+"&url="+url
+      }
 }
 
 const setMainImg = () => {
