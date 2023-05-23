@@ -353,15 +353,8 @@ def create_app():
                         return render_template('pop_up.html',
                                                 contents='이미 만든 템플릿입니다. 수정하기를 이용해주세요.',
                                                 url='/')                        
-                    # from app.views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
-                    from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
-                    # groom_dict = groom_dict
-                    # bride_dict = bride_dict
-                    # bank_acc = bank_acc
-                    # wedding_schedule_dict = wedding_schedule_dict
-                    # message_templates_dict = message_templates_dict
-                    # guestbook_list = guestbook_list
-                    # image_list = image_list
+                    from app.views.template_dummy_for_html import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
+                    # from app.views.template_dummy import groom_dict, bride_dict, bank_acc, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list
                 return render_template('/create.html',  
                                     groom_dict=groom_dict, 
                                     bride_dict=bride_dict,
@@ -446,7 +439,7 @@ def create_app():
 
                 # 방명록 비밀번호 업데이트 -> 디폴트값 0000
                 user_item = db_session.query(User).filter(User.id == id).first()
-                user_item.guestbook_pw = guestbook_password
+                user_item.guestbook_pw = guestbook_password['password']
                 db_session.commit()
 
                 # 계좌
