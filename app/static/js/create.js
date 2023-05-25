@@ -6,6 +6,7 @@ const changeInputImg = (target) => {
     const fileList = target.files ;    
     if(fileList.length === 0 ) return;
     const _imgContainer = target.closest('.img-container');
+    _imgContainer.querySelector('p').innerHTML = `<i class="ph-bold ph-circle-notch"></i>`
     const targetName = target.closest('.image-info').getAttribute('name');
     const isMainImageInfo = targetName === imgTypelist[0] || targetName === imgTypelist[2] ? true : false;
     const _canvas = _imgContainer.querySelector('canvas');
@@ -682,6 +683,9 @@ const getInputData = () => {
     });
     if(!requiredPass) return;
     // 끝 유효성 검사 코드
+
+    document.querySelector('.full-background').classList.add('active');
+
     const typeList = [
         'groom_dict', 
         'bride_dict', 
@@ -717,15 +721,17 @@ const getInputData = () => {
 
 const callbackFun = (data) => {
     console.log('성공', data)
+    document.querySelector('.full-background').classList.remove('active');
+
     if (data['message'] == 'Success') {
         const contents = data['contents']
         const url = data['url']
         window.location.href = '/pop_up?contents='+contents+"&url="+url
-      } else {
+    } else {
         const contents = data['contents']
         const url = data['url']
         window.location.href = '/pop_up?contents='+contents+"&url="+url
-      }
+    }
 }
 
 const setMainImg = () => {

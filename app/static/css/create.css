@@ -194,6 +194,11 @@ input[name="wedding-place addr"] {
   color: rgb(246, 94, 50); 
   text-decoration: underline;
 }
+.image-info > div p i {
+  font-size: 30px;
+  color: rgb(246, 94, 50);
+  animation: infinite-rotation 2s linear infinite; /* 무한 회전 애니메이션 적용 */
+}
 
 .image-info > div .hasImg p {
   display: none;
@@ -443,3 +448,29 @@ form[name="gallery-info"] div.gallery-image:nth-child(n+10) {
 	display: none !important;
 }
 
+.full-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  display: none;
+  justify-content:center;
+  align-items:center;
+  background: rgba(0, 0, 0, 0.5);
+}
+.full-background i{
+  font-size: 40px;
+  color: rgb(246, 94, 50);
+  animation: infinite-rotation 2s linear infinite; /* 무한 회전 애니메이션 적용 */
+}
+.full-background.active{
+  display: flex;
+}
+
+@keyframes infinite-rotation {
+  100% {
+    transform: rotate(360deg); /* 종료 지점 */
+  }
+}

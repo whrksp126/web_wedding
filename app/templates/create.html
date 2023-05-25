@@ -427,6 +427,9 @@
         <div class="card card-submit">
             <div class="card-top">
                 <button onclick="getInputData()">저장</button>
+                <div class="full-background">
+                    <i class="ph-bold ph-circle-notch"></i>
+                </div>
                 <button onclick="">삭제</button>
                 <a href="/">돌아가기</a>
             </div>
@@ -447,7 +450,6 @@
         const message_templates_dict = {{message_templates_dict|safe}};
         const image_list = {{image_list|safe}};
         const template_id = {{template_id}};
-        console.log(template_id)
     </script>
     <script src="/static/js/common.js"></script>
     <script src="/static/js/create.js"></script>

@@ -37,11 +37,6 @@ bank_acc = [
                 "name":"",
                 "number":""
             },
-            {
-                "bank":"",
-                "name":"",
-                "number":""
-            }
         ]
     },
     {
@@ -52,11 +47,6 @@ bank_acc = [
                 "name":"",
                 "number":""
             },
-            {
-                "bank":"",
-                "name":"",
-                "number":""
-            }
         ]
     },
 ]
