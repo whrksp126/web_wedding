@@ -5,6 +5,7 @@ import bcrypt
 import json
 from datetime import datetime, timedelta
 import shutil
+import urllib.parse
 
 from app.models import session_scope, User, Information, Weddinghall, Transportation, Account, Guestbook, Transportationtype, Textlist, Texttype, Picture, Picturetype, UserHasTemplate
 from app.config import secret_key, bcrypt_level
@@ -132,13 +133,20 @@ def create_app():
                                     .filter(Transportation.usertemplate_id == usertemplate_id)
             
             transport_list = []
+
+            # 현재 URL 경로 가져오기
+            current_path = urllib.parse.urlparse(request.url).path
             for i ,t in enumerate(transportation_type):
                 content = (transporation_query.filter(Transportation.transportation_type == i+1).first()).contents
-                if content != '':
-                    transport_list.append({
-                        "title_transport":t.name,
-                        "contents_transport":(transporation_query.filter(Transportation.transportation_type == i+1).first()).contents
-                    })
+                transport_item = {
+                    "title_transport": t.name,
+                    "contents_transport": content
+                }
+                if current_path == '/invitation' and content != '':
+                    transport_list.append(transport_item)
+                else:
+                    transport_list.append(transport_item)
+
 
 
             # guestbook

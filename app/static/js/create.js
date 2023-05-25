@@ -718,9 +718,10 @@ const getInputData = () => {
     console.log(submitObj)
 
 
+    console.log(submitObj)
     const formData = getImgData()
     formData.append('json', JSON.stringify(submitObj));
-    postApi('/create', formData, callbackFun)
+    // postApi('/create', formData, callbackFun)
 
 }
 
