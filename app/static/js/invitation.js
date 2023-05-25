@@ -291,8 +291,12 @@ const submitGuestbook = () => {
   .then(response => response.json()) // 응답 데이터를 JSON으로 파싱
   .then(result => {
       // 성공적으로 응답 받았을 때 실행할 코드 작성
-      console.log(result)
-      // console.log(result);
+      if(result.message == 'Sample'){
+        alert('샘플보기에서는 방명록을 작성할 수 없습니다.')
+        return
+      }else{
+        location.reload(true);
+      }
   })
   .catch(error => {
       // 요청이 실패했을 때 실행할 코드 작성
@@ -332,6 +336,10 @@ const openModalDeleteGusetbook = (id) => {
 const deleteGuestBook = (id, event) => {
   console.log('실행됨')
   event.preventDefault();
+  if(usertemplate_id == 'sample') {
+    alert('샘플 보기에서는 방명록 삭제가 불가능 합니다.')
+    return 
+  }
   const password = document.querySelector('#gustBook_password').value
   const postData = new Object();
   postData.password = password

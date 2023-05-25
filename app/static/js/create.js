@@ -118,6 +118,7 @@ const clickDeleteImg = (e) => {
     const _imgInfo = e.target.closest('.image-info');
     const type = _imgInfo.getAttribute('name');
     if(type === imgTypelist[0] || type === imgTypelist[2]){
+        _imgContainer.querySelector('p').innerHTML = '클릭 후 업로드'
         _imgContainer.classList.remove('hasImg');
         const canvas = _imgContainer.querySelector('canvas')
         canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
@@ -413,6 +414,9 @@ let sortable = Sortable.create(_gallery,{
 });
 
 const openPostCode = (str=null) => {
+    // 주소 input 태그에서 엔터 입력 시 openPostCode 실행
+    const inputElement = document.querySelector("[name='wedding-place addr']");
+    str = inputElement.value
     new daum.Postcode({
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
@@ -667,24 +671,25 @@ const getTextHtml = (id) => {
 
 // submit 데이터 쌓기
 const getInputData = () => {
-
+    document.querySelector('.full-background').classList.add('active');
     // 시작 유효성 검사 코드
     const __required = document.querySelectorAll('[data-required="true"]');
     let requiredPass = true;
     __required.forEach((_required)=>{
         if(!requiredPass) return;
-        if(_required.value == '') {
+        const eleStatus = _required.tagName == 'img' ? _required.getAttribute('src') : _required.value;
+        if(eleStatus == '') {
             requiredPass = false;
             const message = _required.getAttribute('data-message');
             alert(`${message} 을(를) 입력해주세요`)
             const offset = -100;
             _required.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest', offset: offset });
+            document.querySelector('.full-background').classList.remove('active');
         }
     });
     if(!requiredPass) return;
     // 끝 유효성 검사 코드
 
-    document.querySelector('.full-background').classList.add('active');
 
     const typeList = [
         'groom_dict', 

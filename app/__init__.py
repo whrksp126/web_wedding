@@ -133,10 +133,12 @@ def create_app():
             
             transport_list = []
             for i ,t in enumerate(transportation_type):
-                transport_list.append({
-                    "title_transport":t.name,
-                    "contents_transport":(transporation_query.filter(Transportation.transportation_type == i+1).first()).contents
-                })
+                content = (transporation_query.filter(Transportation.transportation_type == i+1).first()).contents
+                if content != '':
+                    transport_list.append({
+                        "title_transport":t.name,
+                        "contents_transport":(transporation_query.filter(Transportation.transportation_type == i+1).first()).contents
+                    })
 
 
             # guestbook
@@ -145,6 +147,8 @@ def create_app():
 
             guestbook_list = []
             for g in guestbook_items:
+                if i >= 5:
+                    break
                 guestbook_list.append({
                     "id" : g.id,
                     "name" : g.writer,
@@ -152,7 +156,14 @@ def create_app():
                     "password" : g.writer_pw,
                     "created_at" : (g.created_at).strftime('%Y.%m.%d')
                 })
-
+            if len(guestbook_list) == 0:
+                guestbook_list.append({
+                    "id" : '',
+                    "name" : '큐피트',
+                    "content_guestbook" : '🌿신랑 신부의 결혼🌸의 축복해주세요🌼',
+                    "password" : '',
+                    "created_at" : ''
+                })
             
             # image
             image_query = db_session.query(Picture)\
@@ -204,6 +215,7 @@ def create_app():
                     "list" : bride_acc_list
                 }
             ]
+            
             # image_list = image_list # 이미지 데이터   
         return groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
 
@@ -594,6 +606,13 @@ def create_app():
         if request.method == 'POST':
             data = request.get_json()
             usertemplate_id = data['usertemplate_id']
+            print(usertemplate_id)
+            if usertemplate_id == 'sample':
+                response = jsonify({
+                    'message': 'Sample'
+                })
+                response.status_code = 200
+                return response
             name = data['name']
             password = data['password']
             content = data['content']

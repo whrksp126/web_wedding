@@ -170,10 +170,10 @@
                     <div>
                         <h4>사진</h4>
                         <div class="main-image img-container" onclick="clickAddImg(this);">
-                            <input type="file" data-required="true" data-message="모시는 글 사진" accept="image/*" data-type="image_list"  data-name="sub_img" hidden="hidden" onchange="changeInputImg(this)">
+                            <input type="file" accept="image/*" data-type="image_list"  data-name="sub_img" hidden="hidden" onchange="changeInputImg(this)">
                             <p>클릭 후 업로드</p>
                             <canvas width="300" height="300"></canvas>
-                            <img class="origin-img" src="" alt="">
+                            <img class="origin-img" src="" alt="" data-required="true" data-message="모시는 글 사진">
                         </div>
                     </div>
                     
@@ -288,10 +288,10 @@
                     <div>
                         <h4>사진</h4>
                         <div class="main-image img-container" onclick="clickAddImg(this);">
-                            <input type="file" data-required="true" data-message="메인 이미지" accept="image/*" data-type="image_list"  data-name="main_img"  hidden="hidden" onchange="changeInputImg(this)">
+                            <input type="file"  accept="image/*" data-type="image_list"  data-name="main_img"  hidden="hidden" onchange="changeInputImg(this)">
                             <p>클릭 후 업로드</p>
                             <canvas width="300" height="300"></canvas>
-                            <img class="origin-img" src="" alt="">
+                            <img class="origin-img" data-required="true" data-message="메인 이미지" src="" alt="" >
 
                         </div>
                     </div>
@@ -311,10 +311,10 @@
                     <div>
                         <!-- <h4>갤러리</h4> -->
                         <div class="gallery-image img-container" onclick="clickAddImg(this);">
-                            <input type="file" data-required="true" data-message="갤러리 이미지" accept="image/*" hidden="hidden" onchange="changeInputImg(this);">
+                            <input type="file"  accept="image/*" hidden="hidden" onchange="changeInputImg(this);">
                             <p>클릭 후 업로드</p>
                             <canvas width="300" height="300"></canvas>
-                            <img class="origin-img" src="" alt="">
+                            <img class="origin-img" data-required="true" data-message="갤러리 이미지" src="" alt="">
                             <img class="crop-img" src="" alt="">
                         </div>
                     </div>
@@ -417,7 +417,7 @@
                 <form name="guest-book-info">
                     <div>
                         <h4>비밀번호</h4>
-                        <input type="password" data-required="true" data-message="방명록 비밀번호" data-type="guestbook_password" data-name="password" >
+                        <input type="password" data-required="true" data-message="방명록 비밀번호" data-type="guestbook_password" data-name="password" value="">
                     </div>
                 </form>
             </div>

@@ -360,9 +360,11 @@
                         <div class="item animation-box" data-animation="slide-up">
                             <div class="close">
                                 <span class="date">{{guestbook.created_at}}</span>
+                                {% if guestbook.id != '' %}
                                 <span class="icon" onclick="openModalDeleteGusetbook({{ guestbook.id }})">
                                     <i class="ph-bold ph-x"></i>
                                 </span>
+                                {% endif %}
                             </div>
                             <div class="name">{{guestbook.name}}</div>
                             <div class="text" data-type="guestbook" data-index="{{loop.index0}}" guestbook-type="content"></div>
@@ -437,13 +439,13 @@
         // jinja2 데이터 받기
         const message_templates_dict = {{message_templates_dict|safe}}; 
         const transport_list = {{transport_list|safe}};
+        console.log(transport_list)
         const guestbook_list = {{guestbook_list|safe}};
         const wedding_schedule_dict = {{wedding_schedule_dict|safe}};
         const groom_dict = {{groom_dict|safe}}
         const bride_dict = {{bride_dict|safe}}
         const image_list = {{image_list|safe}}
-
-        const usertemplate_id = {{usertemplate_id|safe}}
+        const usertemplate_id = "{{usertemplate_id|safe}}" === "None" ? "sample" : Number("{{usertemplate_id|safe}}");
 
         console.log("message_templates_dict",message_templates_dict)
     </script>
