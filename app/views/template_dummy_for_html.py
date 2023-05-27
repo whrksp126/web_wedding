@@ -30,7 +30,7 @@ bride_dict = {
 
 bank_acc = [
     {
-        "group_name" : "",
+        "group_name" : "신랑측",
         "list" : [
             {
                 "bank":"",
@@ -40,7 +40,7 @@ bank_acc = [
         ]
     },
     {
-        "group_name" : "",
+        "group_name" : "신부측",
         "list" : [
             {
                 "bank":"",

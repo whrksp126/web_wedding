@@ -3,7 +3,9 @@ insertHTML('[data-type="message"]', message_templates_dict);
 
 // 교통 수단 추가
 transport_list.forEach((transport, index)=>{
-  insertHTML(`[data-type="transport"][data-index="${index}"]`, transport);
+  if(transport.contents_transport != ''){
+    insertHTML(`[data-type="transport"][data-index="${index}"]`, transport);
+  }
 })
 
 // 방명록 추가
@@ -344,6 +346,7 @@ const deleteGuestBook = (id, event) => {
   const postData = new Object();
   postData.password = password
   postData.id = id
+  postData.usertemplate_id = usertemplate_id
   fetch('delete_guestbook', {
     method: 'POST', // 요청 메서드
     headers: {

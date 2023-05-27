@@ -200,7 +200,7 @@ def create_app():
             groom_acc_list = []
             bride_acc_list = []
             for a in account_items:
-                if a.relation_id//2 == 1:
+                if a.relation_id == 1:
                     groom_acc_list.append({
                         "bank":a.acc_bank,
                         "name":a.acc_name,
@@ -224,8 +224,16 @@ def create_app():
                 }
             ]
             
+            # 방명록 관리자 비밀번호
+            usertemplate_item = db_session.query(UserHasTemplate)\
+                                        .filter(UserHasTemplate.id == usertemplate_id).first()
+            user_item = db_session.query(User)\
+                                .filter(User.id == usertemplate_item.user_id).first()
+            
+            guestbook_pw = {'password' : user_item.guestbook_pw}
+            
             # image_list = image_list # 이미지 데이터   
-        return groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
+        return groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_pw
 
     @app.route("/")
     def index():
@@ -267,7 +275,7 @@ def create_app():
                                             url='/')
                 else:    
                     usertemplate_id = usertemplate_item.id
-                    groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(usertemplate_item.id)
+                    groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_pw= user_template_info(usertemplate_item.id)
         return render_template('invitation.html',  
                             groom_dict=groom_dict, 
                             bride_dict=bride_dict,
@@ -277,7 +285,8 @@ def create_app():
                             guestbook_list=guestbook_list,
                             image_list=image_list,
                             bank_acc=bank_acc,
-                            usertemplate_id = usertemplate_id if not is_sample and usertemplate_item else None
+                            usertemplate_id = usertemplate_id if not is_sample and usertemplate_item else None,
+                            guestbook_pw=guestbook_pw
                             )
 
 
@@ -347,8 +356,10 @@ def create_app():
 
     @app.route("/create", methods=['GET', 'POST'])
     def create():
-        is_edit = request.args.get('edit')
+        
         if request.method == 'GET':
+            is_edit = request.args.get('edit')
+            
             if 'user' in session:
                 id = session['user']['id']
                 user_id = session['user']['user_id']
@@ -367,7 +378,7 @@ def create_app():
                                                 contents='청첩장을 만들어주세요.',
                                                 url='/')
                     else:
-                        groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc = user_template_info(usertemplate_item.id)
+                        groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_pw = user_template_info(usertemplate_item.id)
                 else:                   # create
                     if usertemplate_item:   # 이미 해당 탬플릿을 만들었다면
                         return render_template('pop_up.html',
@@ -392,7 +403,7 @@ def create_app():
                 user_id = session['user']['user_id']
 
                 json_data = json.loads(request.form.get('json'))
-
+                is_edit = json_data['edit'] if 'edit' in json_data else None
                 groom_dict = json_data['groom_dict']
                 bride_dict = json_data['bride_dict']
                 wedding_dict = json_data['wedding_schedule_dict']
@@ -400,7 +411,7 @@ def create_app():
                 guestbook_password = json_data['guestbook_password']
                 bank_acc = json_data['bank_acc']
                 transport_list = json_data['transport_list']
-
+                print('bank_acc,',bank_acc)
                 print("@#$groom_dict", groom_dict)
                 print("@#$wedding_dict", wedding_dict)
 
@@ -408,6 +419,7 @@ def create_app():
                 with session_scope() as db_session:
                     usertemplate_item = db_session.query(UserHasTemplate)\
                                                 .filter(UserHasTemplate.user_id == id, UserHasTemplate.template_id == template_id).first()
+                    
                     if is_edit:    # update시 기존 데이터 다 삭제 후 다시 넣음
                         usertemplate_id = usertemplate_item.id
                         db_session.query(Account).filter(Account.usertemplate_id == usertemplate_id).delete()
@@ -643,16 +655,34 @@ def create_app():
             data = request.get_json()
             password = data['password']
             id = data['id']
+            usertemplate_id = data['usertemplate_id']
             print('password,',password)
             print('id,',id)
             
             with session_scope() as db_session:
-                db_session.query(Guestbook).filter(Guestbook.id == id).delete()
-            
-            response = jsonify({
-                'message': 'Success'
-            })
-            response.status_code = 200
+                if session['user']:         # 관리자가 삭제할 떄
+                    usertemplate_item = db_session.query(UserHasTemplate)\
+                                                .filter(UserHasTemplate.id == usertemplate_id).first()
+                    user_item = db_session.query(User)\
+                                        .filter(User.id == usertemplate_item.user_id).first()
+                    get_pw = user_item.guestbook_pw
+                    
+                else:                       # 작성자가 삭제할 때
+                    guestbook_item = db_session.query(Guestbook).filter(Guestbook.id == id).first()
+                    get_pw = guestbook_item.writer_pw
+                
+                if password == get_pw:
+                    db_session.query(Guestbook).filter(Guestbook.id == id).delete()
+                    response = jsonify({
+                        'message': 'Success'
+                    })
+                    response.status_code = 200
+                else:
+                    response = jsonify({
+                        'message': 'Failed'
+                    })
+                    response.status_code = 401
+                    
             return response
         
     @app.route('/logout')

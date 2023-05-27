@@ -379,7 +379,7 @@
                     {% set group_index = loop.index %}
                     <div>
                         <h4>그룹명</h4>
-                        <input type="text" readonly disabled placeholder="신랑측" data-type="bank_acc" data-name="group_name" value="{{bank.group_name}}">
+                        <input type="text" readonly disabled placeholder="{{bank.group_name}}" data-type="bank_acc" data-name="group_name" value="{{bank.group_name}}">
                     </div>
                     <br>
 
@@ -417,7 +417,7 @@
                 <form name="guest-book-info">
                     <div>
                         <h4>비밀번호</h4>
-                        <input type="password" data-required="true" data-message="방명록 비밀번호" data-type="guestbook_password" data-name="password" value="">
+                        <input type="password" data-required="true" data-message="방명록 비밀번호" data-type="guestbook_password" data-name="password" value="{{ guestbook_pw }}">
                     </div>
                 </form>
             </div>
@@ -450,6 +450,7 @@
         const message_templates_dict = {{message_templates_dict|safe}};
         const image_list = {{image_list|safe}};
         const template_id = {{template_id}};
+        console.log({{bank_acc|safe}})
     </script>
     <script src="/static/js/common.js"></script>
     <script src="/static/js/create.js"></script>

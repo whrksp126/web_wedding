@@ -498,13 +498,13 @@ const addbankDataHtml = (event, index) => {
         <div class="other bank-number-${index}">
             <h4>계좌번호</h4>
             <div class="account-data">
-                <input type="text" placeholder="은행" value="">
-                <input type="text" placeholder="계좌번호" value="">
+                <input type="text" data-required="true" data-message="은행" placeholder="은행" data-type="bank_acc" data-name="list" list-type="bank" value="">
+                <input type="text" data-required="true" data-message="계좌번호" placeholder="계좌번호" data-type="bank_acc" data-name="list" list-type="number" value="">
             </div>
         </div>
         <div class="other bank-name-${index}">
             <h4>예금주</h4>
-            <input type="text" value="">
+            <input type="text" data-required="true" data-message="예금주" data-type="bank_acc" data-name="list" list-type="name" value="">
         </div>
         <br class="other bank-br-tag-${index}">
     `
@@ -531,6 +531,7 @@ const getBankData = () => {
     let obj = {};
     let listObj = {};
     __bankAcc.forEach((_bankAcc)=>{
+        console.log(_bankAcc)
         const dataName = _bankAcc.getAttribute('data-name');
         if(dataName == 'group_name'){
             if(obj['groupName']){
@@ -717,13 +718,21 @@ const getInputData = () => {
     submitObj['template_id'] = template_id
     console.log(submitObj)
 
+    // 현재 URL의 쿼리 문자열 가져오기
+    const queryString = window.location.search;
+    // URLSearchParams 객체를 사용하여 쿼리 문자열 구문 분석
+    const params = new URLSearchParams(queryString);
+    // 특정 파라미터의 값을 가져오기
+    const param1 = params.get('edit');
+    if(param1 == 'true'){
+        submitObj['edit'] = param1
+    }
 
-    console.log(submitObj)
     const formData = getImgData()
     formData.append('json', JSON.stringify(submitObj));
-    // postApi('/create', formData, callbackFun)
-
+    postApi('/create', formData, callbackFun)
 }
+
 
 const callbackFun = (data) => {
     console.log('성공', data)
