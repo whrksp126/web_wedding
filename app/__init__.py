@@ -42,14 +42,16 @@ def create_app():
 
     def user_template_info(usertemplate_id):
         # 더미 존
-        from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list
+        from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, guestbook_list, image_list, transport_list, guestbook_password
         groom_dict = groom_dict # 신랑 데이터
         bride_dict = bride_dict # 신부 데이터
         wedding_schedule_dict = wedding_schedule_dict # 장소와 시간 데이터
         message_templates_dict = message_templates_dict # 글귀 데이터
         transport_list = transport_list # 교통 수단 데이터
         guestbook_list = guestbook_list # 방명록 데이터
+        guestbook_pw = guestbook_password
         # 더미 끝
+        print(guestbook_pw)
 
         with session_scope() as db_session:
             # groom
@@ -231,7 +233,6 @@ def create_app():
                                 .filter(User.id == usertemplate_item.user_id).first()
             
             guestbook_pw = {'password' : user_item.guestbook_pw}
-            
             # image_list = image_list # 이미지 데이터   
         return groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_pw
 
@@ -247,7 +248,7 @@ def create_app():
         is_sample = request.args.get('sample')
 
         if is_sample:       # 샘플보기
-            from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
+            from app.views.template_dummy import groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_password
             groom_dict = groom_dict
             bride_dict = bride_dict
             wedding_schedule_dict = wedding_schedule_dict
@@ -256,7 +257,8 @@ def create_app():
             guestbook_list = guestbook_list
             image_list = image_list
             bank_acc = bank_acc
-            groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
+            guestbook_pw = guestbook_password
+            # groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc
         else:               # 내 청첩장 보기
             id = request.args.get('id', type=int)
             template_id = request.args.get('template_id', type=int)
