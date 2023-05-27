@@ -220,6 +220,13 @@ __copyButton.forEach((copyButton)=>{
 // 카카오 공유하기 
 //<![CDATA[
   // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+  // 현재 URL의 쿼리 문자열 가져오기
+  const queryString = window.location.search;
+  // URLSearchParams 객체를 사용하여 쿼리 문자열 구문 분석
+  const params = new URLSearchParams(queryString);
+  // 특정 파라미터의 값을 가져오기
+  const template_id = params.get('template_id');
+  const id = params.get('id');
   Kakao.init('19e6d6ca2612380690e073e3e59433ec');
   // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
   Kakao.Share.createDefaultButton({
@@ -230,16 +237,16 @@ __copyButton.forEach((copyButton)=>{
       description: `${wedding_schedule_dict.hall_detail}  ${wedding_schedule_dict.date}  ${wedding_schedule_dict.time}`,
       imageUrl: `http://wedding.ghmate.com${image_list.main_img}`,
       link: {
-        mobileWebUrl: 'http://wedding.ghmate.com/invitation',
-        webUrl: 'http://wedding.ghmate.com/invitation'
+        mobileWebUrl: `http://wedding.ghmate.com/invitation?template_id=${template_id}&id=${id}`,
+        webUrl: `http://wedding.ghmate.com/invitation?template_id=${template_id}&id=${id}`
       }
     },
     buttons: [
       {
         title: '모바일 청첩장 확인하기',
         link: {
-          mobileWebUrl: 'http://wedding.ghmate.com/invitation',
-          webUrl: 'http://wedding.ghmate.com/invitation'
+          mobileWebUrl: `http://wedding.ghmate.com/invitation?template_id=${template_id}&id=${id}`,
+          webUrl: `http://wedding.ghmate.com/invitation?template_id=${template_id}&id=${id}`
         }
       },
     ]
