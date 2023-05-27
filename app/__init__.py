@@ -275,7 +275,7 @@ def create_app():
                                             url='/')
                 else:    
                     usertemplate_id = usertemplate_item.id
-                    groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_pw= user_template_info(usertemplate_item.id)
+                    groom_dict, bride_dict, wedding_schedule_dict, message_templates_dict, transport_list, guestbook_list, image_list, bank_acc, guestbook_pw = user_template_info(usertemplate_item.id)
         return render_template('invitation.html',  
                             groom_dict=groom_dict, 
                             bride_dict=bride_dict,
