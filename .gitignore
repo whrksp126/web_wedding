@@ -2,3 +2,4 @@
 __pycache__/
 gunicorn_log/
 app/static/images/users/*
+app/config.py
